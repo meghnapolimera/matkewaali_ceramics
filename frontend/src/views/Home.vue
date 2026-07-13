@@ -1,0 +1,41 @@
+<template>
+  <div class="home" :style="{ backgroundImage: `url(${bgImage})` }"></div>
+</template>
+
+<script setup>
+import bgImage from '@/assets/candle_cup_background.jpeg'
+</script>
+
+<style scoped>
+.home {
+  margin: 0;
+  height: 80vh;
+  background-size: contain;
+  background-position: top center;
+  background-repeat: no-repeat;
+  background-color: black;
+  position: relative;
+}
+
+.home::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40%;
+  background: linear-gradient(to bottom, transparent, black);
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .home {
+    width: 100vw;
+    height: 60vh;
+    background-size: cover;
+    background-position: center center;
+    margin: 0;
+    padding: 0;
+  }
+}
+</style>

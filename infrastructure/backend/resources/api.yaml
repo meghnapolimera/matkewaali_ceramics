@@ -1,0 +1,14 @@
+MatkewaaliServiceApi:
+  Type: AWS::Serverless::Api
+  Properties:
+    Name: !Sub "matkewaali-service-${Environment}"
+    StageName: api
+    MethodSettings:
+      - ResourcePath: '/*'
+        HttpMethod: '*'
+        ThrottlingBurstLimit: 100
+        ThrottlingRateLimit: 50
+    Cors:
+      AllowMethods: "'GET,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+      AllowOrigin: "'*'"

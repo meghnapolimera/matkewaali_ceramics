@@ -1,0 +1,11 @@
+ProductsTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: !Sub "matkewaali-products-${Environment}"
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: slug
+        KeyType: HASH
+    AttributeDefinitions:
+      - AttributeName: slug
+        AttributeType: S

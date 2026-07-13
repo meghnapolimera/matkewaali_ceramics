@@ -16,17 +16,24 @@
       </div>
       <nav :class="{ 'nav-active': isMenuOpen }">
         <router-link to="/" @click="closeMenu">Home</router-link>
+        <router-link to="/products" @click="closeMenu">Shop</router-link>
+        <router-link to="/about" @click="closeMenu">About</router-link>
         <router-link to="/contact" @click="closeMenu">Contact</router-link>
       </nav>
+      <router-link to="/cart" class="cart-icon">
+        <i class="fas fa-shopping-cart"></i>
+        <span v-if="itemCount > 0" class="cart-count">{{ itemCount }}</span>
+      </router-link>
     </div>
   </header>
 </template>
 
 <script setup>
 import { ref } from 'vue';
-import matkewaali_ceramics_white_logo from '@/assets/matkewaali_ceramics_white_logo.png'; // Adjust the path based on your project structure
+import { useCart } from '@/stores/cart';
 
 const isMenuOpen = ref(false);
+const { itemCount } = useCart();
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;
@@ -64,7 +71,32 @@ header {
 .social-icon {
   margin-right: 0;
   color: #FEFCF3;
-  font-size: 1.2em; /* Smaller Instagram icon */
+  font-size: 1.2em;
+}
+
+.cart-icon {
+  position: relative;
+  color: #FEFCF3;
+  font-size: 1.2em;
+  margin-left: 1.5em;
+  text-decoration: none;
+}
+
+.cart-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background-color: #FEFCF3;
+  color: black;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.6rem;
+  font-weight: 400;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .hamburger {
@@ -92,6 +124,16 @@ nav a, nav router-link {
   text-decoration: none;
   margin-left: 1em;
   color: #FEFCF3;
+  font-family: "Dosis", sans-serif;
+  font-size: 1.125rem;
+  font-weight: 200;
+}
+
+/* Tablet and up */
+@media (min-width: 600px) {
+  nav a, nav router-link {
+    font-size: 1.1875rem;
+  }
 }
 
 /* Mobile styles */
@@ -136,8 +178,14 @@ nav a, nav router-link {
   }
 
   .social-icon {
-  margin-right: 1em;
-}
+    margin-right: 1em;
+  }
+
+  .cart-icon {
+    order: -1;
+    margin-left: 0;
+    margin-right: 1em;
+  }
 }
 
 /* Adjust the main content */

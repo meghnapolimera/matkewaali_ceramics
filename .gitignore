@@ -28,3 +28,8 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+# SAM build artifacts
+.aws-sam/
+infrastructure/backend/.packaged.yaml
+infrastructure/backend/template.yaml

@@ -1,0 +1,33 @@
+MatkewaaliServiceFunction:
+  Type: AWS::Serverless::Function
+  Metadata:
+    BuildMethod: esbuild
+    BuildProperties:
+      Minify: false
+      Target: es2022
+      Sourcemap: true
+      EntryPoints:
+        - src/handler.ts
+  Properties:
+    FunctionName: !Sub "matkewaali-service-${Environment}"
+    CodeUri: ../../backend
+    Handler: handler.handler
+    Policies:
+      - DynamoDBReadPolicy:
+          TableName: !Sub "matkewaali-products-${Environment}"
+    Environment:
+      Variables:
+        PRODUCTS_TABLE: !Sub "matkewaali-products-${Environment}"
+    Events:
+      ListProducts:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /products
+          Method: GET
+      GetProduct:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /products/{slug}
+          Method: GET

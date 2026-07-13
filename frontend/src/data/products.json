@@ -1,0 +1,134 @@
+[
+  {
+    "id": "1",
+    "slug": "mug-no-1",
+    "name": "Mug No. 1",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_1.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "2",
+    "slug": "mug-no-2",
+    "name": "Mug No. 2",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_2.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "3",
+    "slug": "mug-no-3",
+    "name": "Mug No. 3",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_3.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "4",
+    "slug": "mug-no-4",
+    "name": "Mug No. 4",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_4.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "5",
+    "slug": "mug-no-5",
+    "name": "Mug No. 5",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_5.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "6",
+    "slug": "mug-no-6",
+    "name": "Mug No. 6",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_6.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "7",
+    "slug": "mug-no-7",
+    "name": "Mug No. 7",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_7.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "8",
+    "slug": "mug-no-8",
+    "name": "Mug No. 8",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_8.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "9",
+    "slug": "mug-no-9",
+    "name": "Mug No. 9",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_9.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "10",
+    "slug": "mug-no-10",
+    "name": "Mug No. 10",
+    "price": 50,
+    "description": "A wheel-thrown mug with hand-textured surfaces and a rustic, earthy glaze. Each mark left in the clay tells the story of its making.",
+    "image": "mug_10.jpeg",
+    "height": "3.5 in",
+    "width": "3 in",
+    "volume": "10 oz"
+  },
+  {
+    "id": "12",
+    "slug": "pour-over",
+    "name": "Pour-Over",
+    "price": 90,
+    "description": "A hand-thrown ceramic pour-over combining functional precision with organic form. Designed to slow down the ritual of brewing and bring warmth to everyday moments.",
+    "image": "pour_over_1.jpeg",
+    "height": "5.5 in",
+    "width": "4 in",
+    "volume": "17 oz"
+  },
+  {
+    "id": "13",
+    "slug": "pouring-jar",
+    "name": "Pouring Jar",
+    "price": 50,
+    "description": "A versatile hand-thrown pouring jar with a comfortable grip and a considered spout. At home on the table or the countertop.",
+    "image": "pouring_jar_1.jpeg",
+    "height": "4.75 in",
+    "width": "3.5 in",
+    "volume": "13 oz"
+  }
+]

@@ -1,0 +1,19 @@
+version = 0.1
+
+[test.deploy.parameters]
+stack_name = "matkewaali-backend-test"
+s3_prefix = "matkewaali-backend-test"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=test"
+confirm_changeset = false
+resolve_s3 = true
+
+[prod.deploy.parameters]
+stack_name = "matkewaali-backend-prod"
+s3_prefix = "matkewaali-backend-prod"
+region = "us-east-1"
+capabilities = "CAPABILITY_IAM"
+parameter_overrides = "Environment=prod"
+confirm_changeset = true
+resolve_s3 = true

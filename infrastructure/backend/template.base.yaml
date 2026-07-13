@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - test
+      - prod
+
+Globals:
+  Function:
+    Timeout: 30
+    MemorySize: 256
+    Runtime: nodejs22.x
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${MatkewaaliServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api"
+    Export:
+      Name: !Sub "matkewaali-api-url-${Environment}"
