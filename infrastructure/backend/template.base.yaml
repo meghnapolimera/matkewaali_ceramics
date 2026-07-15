@@ -7,6 +7,16 @@ Parameters:
     AllowedValues:
       - test
       - prod
+  AlertEmail:
+    Type: String
+    Default: ""
+  SquareAppId:
+    Type: String
+  SquareLocationId:
+    Type: String
+
+Conditions:
+  IsProd: !Equals [!Ref Environment, prod]
 
 Globals:
   Function:
@@ -20,3 +30,8 @@ Outputs:
     Value: !Sub "https://${MatkewaaliServiceApi}.execute-api.${AWS::Region}.amazonaws.com/api"
     Export:
       Name: !Sub "matkewaali-api-url-${Environment}"
+  IdentityPoolId:
+    Description: Cognito Identity Pool ID for frontend auth
+    Value: !Ref MatkewaaliIdentityPool
+    Export:
+      Name: !Sub "matkewaali-identity-pool-id-${Environment}"

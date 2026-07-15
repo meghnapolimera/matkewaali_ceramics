@@ -19,3 +19,25 @@ ProductImagesBucketPolicy:
           Principal: '*'
           Action: s3:GetObject
           Resource: !Sub "arn:aws:s3:::matkewaali-product-images-${Environment}/*"
+
+AssetsBucket:
+  Type: AWS::S3::Bucket
+  Properties:
+    BucketName: !Sub "matkewaali-assets-${Environment}"
+    PublicAccessBlockConfiguration:
+      BlockPublicAcls: false
+      BlockPublicPolicy: false
+      IgnorePublicAcls: false
+      RestrictPublicBuckets: false
+
+AssetsBucketPolicy:
+  Type: AWS::S3::BucketPolicy
+  Properties:
+    Bucket: !Ref AssetsBucket
+    PolicyDocument:
+      Version: '2012-10-17'
+      Statement:
+        - Effect: Allow
+          Principal: '*'
+          Action: s3:GetObject
+          Resource: !Sub "arn:aws:s3:::matkewaali-assets-${Environment}/*"

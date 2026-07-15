@@ -1,0 +1,11 @@
+SubscribersTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: !Sub "matkewaali-subscribers-${Environment}"
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: email
+        KeyType: HASH
+    AttributeDefinitions:
+      - AttributeName: email
+        AttributeType: S

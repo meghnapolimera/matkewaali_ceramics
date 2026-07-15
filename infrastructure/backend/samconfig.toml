@@ -4,8 +4,8 @@ version = 0.1
 stack_name = "matkewaali-backend-test"
 s3_prefix = "matkewaali-backend-test"
 region = "us-east-1"
-capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Environment=test"
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides = "Environment=test SquareAppId=sandbox-sq0idb-1krYjx4chbWW5D4lLu2lRA SquareLocationId=L5AFZQCQS12DH"
 confirm_changeset = false
 resolve_s3 = true
 
@@ -13,7 +13,7 @@ resolve_s3 = true
 stack_name = "matkewaali-backend-prod"
 s3_prefix = "matkewaali-backend-prod"
 region = "us-east-1"
-capabilities = "CAPABILITY_IAM"
-parameter_overrides = "Environment=prod"
+capabilities = "CAPABILITY_NAMED_IAM"
+parameter_overrides = "Environment=prod AlertEmail=meghnapolimera@matkewaali.com SquareAppId=sq0idp-rjSAz-RJbWLxWl2Xr5J0iQ SquareLocationId=L9A23DDTJ0302"
 confirm_changeset = true
 resolve_s3 = true

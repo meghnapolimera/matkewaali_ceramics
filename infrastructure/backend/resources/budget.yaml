@@ -1,0 +1,28 @@
+MatkewaaliMonthlyBudget:
+  Type: AWS::Budgets::Budget
+  Condition: IsProd
+  Properties:
+    Budget:
+      BudgetName: matkewaali-monthly
+      BudgetType: COST
+      TimeUnit: MONTHLY
+      BudgetLimit:
+        Amount: 10
+        Unit: USD
+    NotificationsWithSubscribers:
+      - Notification:
+          NotificationType: ACTUAL
+          ComparisonOperator: GREATER_THAN
+          Threshold: 80
+          ThresholdType: PERCENTAGE
+        Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Ref AlertEmail
+      - Notification:
+          NotificationType: ACTUAL
+          ComparisonOperator: GREATER_THAN
+          Threshold: 100
+          ThresholdType: PERCENTAGE
+        Subscribers:
+          - SubscriptionType: EMAIL
+            Address: !Ref AlertEmail

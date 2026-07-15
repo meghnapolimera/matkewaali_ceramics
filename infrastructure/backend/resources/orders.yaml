@@ -1,0 +1,11 @@
+OrdersTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: !Sub "matkewaali-orders-${Environment}"
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: orderId
+        KeyType: HASH
+    AttributeDefinitions:
+      - AttributeName: orderId
+        AttributeType: S

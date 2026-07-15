@@ -12,12 +12,39 @@ MatkewaaliServiceFunction:
     FunctionName: !Sub "matkewaali-service-${Environment}"
     CodeUri: ../../backend
     Handler: handler.handler
+    ReservedConcurrentExecutions: 5
     Policies:
       - DynamoDBReadPolicy:
           TableName: !Sub "matkewaali-products-${Environment}"
+      - Statement:
+          - Effect: Allow
+            Action: dynamodb:UpdateItem
+            Resource: !Sub "arn:aws:dynamodb:${AWS::Region}:${AWS::AccountId}:table/matkewaali-products-${Environment}"
+      - DynamoDBCrudPolicy:
+          TableName: !Sub "matkewaali-locks-${Environment}"
+      - DynamoDBCrudPolicy:
+          TableName: !Sub "matkewaali-orders-${Environment}"
+      - DynamoDBCrudPolicy:
+          TableName: !Sub "matkewaali-subscribers-${Environment}"
+      - Statement:
+          - Effect: Allow
+            Action: ses:SendEmail
+            Resource: "*"
+      - Statement:
+          - Effect: Allow
+            Action: ssm:GetParameter
+            Resource:
+              - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/square/${Environment}/access-token"
+              - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/shop/${Environment}/enabled"
     Environment:
       Variables:
         PRODUCTS_TABLE: !Sub "matkewaali-products-${Environment}"
+        LOCKS_TABLE: !Sub "matkewaali-locks-${Environment}"
+        ORDERS_TABLE: !Sub "matkewaali-orders-${Environment}"
+        SQUARE_LOCATION_ID: !Ref SquareLocationId
+        ENVIRONMENT: !Ref Environment
+        ASSETS_BASE_URL: !Sub "https://matkewaali-assets-${Environment}.s3.amazonaws.com"
+        SUBSCRIBERS_TABLE: !Sub "matkewaali-subscribers-${Environment}"
     Events:
       ListProducts:
         Type: Api
@@ -31,3 +58,54 @@ MatkewaaliServiceFunction:
           RestApiId: !Ref MatkewaaliServiceApi
           Path: /products/{slug}
           Method: GET
+      RecordEvent:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /analytics/event
+          Method: POST
+      CreateLock:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /locks
+          Method: POST
+      DeleteLock:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /locks/{lockId}
+          Method: DELETE
+      CreateOrder:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /orders
+          Method: POST
+      GetConfig:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /config
+          Method: GET
+      SendContact:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /contact
+          Method: POST
+      Subscribe:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /subscribe
+          Method: POST
+      LockExpiry:
+        Type: DynamoDB
+        Properties:
+          Stream: !GetAtt LocksTable.StreamArn
+          StartingPosition: LATEST
+          FilterCriteria:
+            Filters:
+              - Pattern: '{"userIdentity":{"type":["Service"],"principalId":["dynamodb.amazonaws.com"]}}'
+          BatchSize: 10

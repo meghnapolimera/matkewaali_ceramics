@@ -1,14 +1,27 @@
+MatkewaaliAccessLogGroup:
+  Type: AWS::Logs::LogGroup
+  Properties:
+    LogGroupName: !Sub "/matkewaali/api-access/${Environment}"
+    RetentionInDays: 90
+
 MatkewaaliServiceApi:
   Type: AWS::Serverless::Api
   Properties:
     Name: !Sub "matkewaali-service-${Environment}"
     StageName: api
+    Auth:
+      DefaultAuthorizer: AWS_IAM
+      InvokeRole: NONE
+      AddDefaultAuthorizerToCorsPreflight: false
+    AccessLogSetting:
+      DestinationArn: !GetAtt MatkewaaliAccessLogGroup.Arn
+      Format: '{"requestId":"$context.requestId","cognitoId":"$context.identity.cognitoIdentityId","ip":"$context.identity.sourceIp","requestTime":"$context.requestTime","httpMethod":"$context.httpMethod","path":"$context.path","status":"$context.status","responseLength":"$context.responseLength"}'
     MethodSettings:
       - ResourcePath: '/*'
         HttpMethod: '*'
-        ThrottlingBurstLimit: 100
-        ThrottlingRateLimit: 50
+        ThrottlingBurstLimit: 10
+        ThrottlingRateLimit: 5
     Cors:
-      AllowMethods: "'GET,OPTIONS'"
-      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key'"
+      AllowMethods: "'GET,POST,DELETE,OPTIONS'"
+      AllowHeaders: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
       AllowOrigin: "'*'"

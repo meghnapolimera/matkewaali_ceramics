@@ -24,10 +24,9 @@
 import { ref, onMounted } from 'vue'
 import QRCode from 'qrcode'
 import productsData from '@/data/products.json'
-import logoImage from '@/assets/matkewaali_ceramics_black_logo.png'
 
 const products = ref(productsData)
-const logoUrl = logoImage
+const logoUrl = `${import.meta.env.VITE_ASSETS_BASE_URL}/matkewaali_ceramics_black_logo.png`
 const canvasRefs = ref<Record<string, HTMLCanvasElement | null>>({})
 
 const setCanvasRef = (id: string, el: any) => {

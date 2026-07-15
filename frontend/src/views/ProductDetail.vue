@@ -37,7 +37,9 @@
           <p>All items are food and dishwasher safe, however hand wash with care is highly recommended</p>
         </div>
 
-        <button v-if="product.soldOut" class="sold-out-btn" disabled>Sold Out</button>
+        <button v-if="!shopEnabled" class="sold-out-btn" disabled>Shop is currently closed</button>
+        <button v-else-if="product.soldOut" class="sold-out-btn" disabled>Sold Out</button>
+        <button v-else-if="unavailable" class="sold-out-btn" disabled>Sold Out</button>
         <button v-else class="add-to-cart" @click="addToCart">{{ added ? 'Added' : 'Add to Cart' }}</button>
       </div>
     </div>
@@ -47,8 +49,11 @@
 <script setup lang="ts">
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { api, Product, NotFoundError, ApiError } from '@/services/api'
+import { api, type Product, NotFoundError, ApiError, LockConflictError } from '@/services/api'
 import { useCart } from '@/stores/cart'
+import { useShop } from '@/stores/shop'
+
+const { shopEnabled } = useShop()
 
 const route = useRoute()
 const product = ref<Product | null>(null)
@@ -57,6 +62,7 @@ const notFound = ref(false)
 const error = ref(false)
 const { addItem } = useCart()
 const added = ref(false)
+const unavailable = ref(false)
 
 async function loadProduct() {
   loading.value = true
@@ -75,17 +81,30 @@ async function loadProduct() {
   }
 }
 
-function addToCart() {
-  if (product.value) {
+async function addToCart() {
+  if (!product.value) return
+  const slug = product.value.slug
+  try {
+    const { lockId, expiresAt } = await api.createLock(slug)
     addItem({
-      id: product.value.slug,
-      slug: product.value.slug,
+      id: slug,
+      slug,
       name: product.value.name,
       price: product.value.price,
       image: product.value.imageUrl,
+      lockId,
+      lockedUntil: expiresAt * 1000,
     })
+    api.recordEvent('add_to_cart', { slug })
     added.value = true
-    setTimeout(() => { added.value = false }, 1500)
+    setTimeout(() => {
+      added.value = false
+      if (product.value) product.value.soldOut = true
+    }, 1500)
+  } catch (e) {
+    if (e instanceof LockConflictError) {
+      unavailable.value = true
+    }
   }
 }
 

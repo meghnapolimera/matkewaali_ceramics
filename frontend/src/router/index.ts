@@ -19,6 +19,11 @@ const routes = [
     component: Contact
   },
   {
+    path: '/faq',
+    name: 'FAQ',
+    component: () => import('../views/FAQ.vue')
+  },
+  {
     path: '/products',
     name: 'Products',
     component: () => import('../views/Products.vue')
@@ -37,12 +42,23 @@ const routes = [
     path: '/cart',
     name: 'Cart',
     component: () => import('../views/Cart.vue')
+  },
+  {
+    path: '/checkout',
+    name: 'Checkout',
+    component: () => import('../views/Checkout.vue')
+  },
+  {
+    path: '/terms',
+    name: 'Terms',
+    component: () => import('../views/Terms.vue')
   }
 ];
 
 const router = createRouter({
   history: createWebHistory(),
-  routes
+  routes,
+  scrollBehavior: () => ({ top: 0 }),
 });
 
 export default router;

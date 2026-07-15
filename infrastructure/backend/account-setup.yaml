@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: '2010-09-09'
+# Run once per AWS account: cd infrastructure/backend && make setup-account
+# Grants API Gateway permission to write access logs to CloudWatch.
+Resources:
+  ApiGatewayLogsRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: matkewaali-apigw-logs-role
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: apigateway.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AmazonAPIGatewayPushToCloudWatchLogs
+
+  ApiGatewayAccount:
+    Type: AWS::ApiGateway::Account
+    Properties:
+      CloudWatchRoleArn: !GetAtt ApiGatewayLogsRole.Arn

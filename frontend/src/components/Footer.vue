@@ -1,122 +1,163 @@
 <template>
   <footer class="footer">
     <div class="footer-content">
-      <p v-if="!subscribed" class="footer-text">Subscribe here for updates</p>
-      <form v-if="!subscribed" @submit.prevent="handleSubmit" class="subscription-form">
-        <input
-          type="email"
-          v-model="email"
-          placeholder="Email address"
-          required
-          class="email-input"
-        />
-        <button type="submit" class="submit-button">Sign up</button>
-      </form>
-      <p v-if="subscribed" class="subscription-message">You are subscribed!</p>
+
+      <div class="footer-newsletter">
+        <p class="footer-label">Subscribe for updates</p>
+        <form v-if="!subscribed" @submit.prevent="handleSubmit" class="subscription-form">
+          <input
+            type="email"
+            v-model="email"
+            placeholder="Email address"
+            required
+            class="email-input"
+          />
+          <button type="submit" class="submit-button">Sign up</button>
+        </form>
+        <p v-else class="subscribed-msg">You're subscribed!</p>
+      </div>
+
+      <div class="footer-links">
+        <router-link to="/contact" class="footer-link">Contact</router-link>
+        <span class="footer-divider">·</span>
+        <router-link to="/faq" class="footer-link">FAQ</router-link>
+        <span class="footer-divider">·</span>
+        <router-link to="/terms" class="footer-link">T&amp;C</router-link>
+        <span class="footer-divider">·</span>
+        <a href="https://www.instagram.com/matkewaali/" target="_blank" class="footer-link footer-ig">
+          <i class="fab fa-instagram"></i>
+        </a>
+      </div>
+
     </div>
   </footer>
 </template>
 
-<script>
-export default {
-  data() {
-    return {
-      email: '',
-      subscribed: false
-    };
-  },
-  methods: {
-    async handleSubmit() {
-      try {
-        const response = await fetch('https://script.google.com/macros/s/AKfycbwmg-hLGkfV0GZyDdHjyZZFNRrpTJM2M6xuN5Koa9fVpoyFkMN0I3Mm7cClg8LHrOXQZg/exec', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded'
-          },
-          body: new URLSearchParams({
-            email: this.email
-          })
-        });
+<script setup lang="ts">
+import { ref } from 'vue'
+import { api } from '@/services/api'
 
-        if (response.ok) {
-          this.subscribed = true;
-          this.email = ''; // Clear the input after submission
-        } else {
-          alert('There was a problem with your submission.');
-        }
-      } catch (error) {
-        console.error('Error:', error);
-        alert('There was a problem with your submission.');
-      }
-    }
+const email = ref('')
+const subscribed = ref(false)
+
+async function handleSubmit() {
+  try {
+    await api.subscribe(email.value)
+    subscribed.value = true
+    email.value = ''
+  } catch {
+    // silent — non-critical
   }
-};
+}
 </script>
 
 <style scoped>
 .footer {
   background-color: black;
-  color: #FEFCF3;
-  padding-top: 5vh;
-  text-align: center;
-  height: 15vh;
+  padding: 40px 36px;
 }
 
 .footer-content {
-  max-width: 600px;
+  max-width: 700px;
   margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
 }
 
-.footer-text {
-  margin-bottom: 20px;
+.footer-label {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  margin: 0 0 12px;
+  text-align: center;
 }
 
 .subscription-form {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
+  margin: 0;
+  padding: 0;
 }
 
 .email-input {
-  padding: 10px;
-  border: none;
-  width: 250px;
-  background-color: #FEFCF3;
-  border-style: none;
+  padding: 10px 14px;
+  margin: 0;
+  background-color: transparent;
+  border: 1px solid #444;
+  margin-right: 8px;
+  color: #FEFCF3;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 200;
+  width: 240px;
   outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.email-input::placeholder {
+  color: #666;
+}
+
+.email-input:focus {
+  border-color: #FEFCF3;
 }
 
 .submit-button {
   padding: 10px 20px;
+  margin: 0;
   color: #FEFCF3;
   background-color: black;
+  border: 1px solid #444;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
   cursor: pointer;
-  border-style: solid;
-  border-width: 1px;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
 }
 
-.subscription-message {
+.submit-button:hover {
+  background-color: #FEFCF3;
+  color: black;
+  border-color: #FEFCF3;
+}
+
+.subscribed-msg {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 200;
   color: #FEFCF3;
-  font-size: 1em;
-  margin-top: 20px;
+  margin: 0;
+  text-align: center;
 }
 
-/* Mobile styles */
-@media (max-width: 768px) {
-  .footer {
-    height: 20vh;
-  }
-  .subscription-form {
-    border-radius: 0%;
+.footer-links {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
-.email-input {
-  border-radius: 0%;
+.footer-link {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
 }
 
-.submit-button {
-  border-radius: 0%;
+.footer-link:hover {
+  opacity: 0.6;
 }
+
+.footer-ig {
+  font-size: 1.3rem;
+}
+
+.footer-divider {
+  color: #444;
 }
 </style>

@@ -2,13 +2,10 @@
   <header>
     <div class="logo">
       <router-link to="/">
-        <img src="@/assets/matkewaali_ceramics_white_logo.png" />
+        <img :src="`${assetsBaseUrl}/matkewaali_ceramics_white_logo.png`" />
       </router-link>
     </div>
     <div class="menu-container">
-      <a href="https://www.instagram.com/matkewaali/" target="_blank" class="social-icon">
-        <i class="fab fa-instagram"></i>
-      </a>
       <div class="hamburger" @click="toggleMenu">
         <div class="bar"></div>
         <div class="bar"></div>
@@ -18,7 +15,6 @@
         <router-link to="/" @click="closeMenu">Home</router-link>
         <router-link to="/products" @click="closeMenu">Shop</router-link>
         <router-link to="/about" @click="closeMenu">About</router-link>
-        <router-link to="/contact" @click="closeMenu">Contact</router-link>
       </nav>
       <router-link to="/cart" class="cart-icon">
         <i class="fas fa-shopping-cart"></i>
@@ -34,6 +30,7 @@ import { useCart } from '@/stores/cart';
 
 const isMenuOpen = ref(false);
 const { itemCount } = useCart();
+const assetsBaseUrl = import.meta.env.VITE_ASSETS_BASE_URL;
 
 function toggleMenu() {
   isMenuOpen.value = !isMenuOpen.value;

@@ -9,6 +9,11 @@
       <button class="retry-btn" @click="fetchProducts">Retry</button>
     </div>
 
+    <div v-else-if="!shopEnabled || products.length === 0" class="status-message">
+      <p>Shop is currently closed.</p>
+      <p class="closed-sub">Have a request? <router-link to="/contact" class="contact-link">Get in touch</router-link></p>
+    </div>
+
     <div v-else class="products-grid">
       <router-link
         v-for="product in products"
@@ -31,7 +36,10 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
-import { api, Product, ApiError } from '@/services/api'
+import { api, type Product, ApiError } from '@/services/api'
+import { useShop } from '@/stores/shop'
+
+const { shopEnabled } = useShop()
 
 const products = ref<Product[]>([])
 const loading = ref(true)
@@ -72,6 +80,22 @@ onMounted(fetchProducts)
   font-family: "Dosis", sans-serif;
   font-size: 1rem;
   font-weight: 200;
+}
+
+.closed-sub {
+  color: #999;
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.contact-link {
+  color: #FEFCF3;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.contact-link:hover {
+  color: #ccc;
 }
 
 .spinner {

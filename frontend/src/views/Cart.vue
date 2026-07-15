@@ -16,17 +16,12 @@
             <div class="item-details">
               <span class="item-name">{{ item.name }}</span>
               <span class="item-price">${{ item.price }}</span>
+              <span class="item-expires">Reserved until {{ formatExpiry(item.lockedUntil) }}</span>
             </div>
 
-            <div class="item-quantity">
-              <button class="qty-btn" @click="updateQuantity(item.id, item.quantity - 1)">−</button>
-              <span class="qty-value">{{ item.quantity }}</span>
-              <button class="qty-btn" @click="updateQuantity(item.id, item.quantity + 1)">+</button>
-            </div>
+            <div class="item-total">${{ item.price }}</div>
 
-            <div class="item-total">${{ item.price * item.quantity }}</div>
-
-            <button class="remove-btn" @click="removeItem(item.id)">✕</button>
+            <button class="remove-btn" @click="handleRemove(item)">✕</button>
           </div>
         </div>
 
@@ -35,7 +30,8 @@
             <span>Total</span>
             <span>${{ total }}</span>
           </div>
-          <button class="checkout-btn">Checkout</button>
+          <p v-if="!shopEnabled" class="shop-closed-note">Shop is currently closed — checkout is unavailable.</p>
+          <button v-else class="checkout-btn" @click="router.push('/checkout')">Checkout</button>
         </div>
       </div>
     </div>
@@ -43,12 +39,36 @@
 </template>
 
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import { useCart } from '@/stores/cart'
+import { useShop } from '@/stores/shop'
+import { api } from '@/services/api'
 
-const { items, total, removeItem, updateQuantity } = useCart()
+const { shopEnabled } = useShop()
+
+const router = useRouter()
+const { items, total, removeItem } = useCart()
+
+function formatExpiry(lockedUntil: number): string {
+  return new Date(lockedUntil).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+}
+
+function handleRemove(item: { id: string; lockId: string }) {
+  api.releaseLock(item.lockId)
+  removeItem(item.id)
+}
 </script>
 
 <style scoped>
+.shop-closed-note {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: #999;
+  text-align: center;
+  margin: 0;
+}
+
 .cart-page {
   min-height: calc(100vh - 20vh);
   background-color: black;
@@ -115,7 +135,7 @@ const { items, total, removeItem, updateQuantity } = useCart()
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .item-name {
@@ -132,38 +152,11 @@ const { items, total, removeItem, updateQuantity } = useCart()
   color: #999;
 }
 
-.item-quantity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.qty-btn {
-  background: none;
-  border: 1px solid #444;
-  color: #FEFCF3;
-  width: 28px;
-  height: 28px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+.item-expires {
   font-family: "Dosis", sans-serif;
-  transition: border-color 0.2s ease;
-}
-
-.qty-btn:hover {
-  border-color: #FEFCF3;
-}
-
-.qty-value {
-  font-family: "Dosis", sans-serif;
-  font-size: 1.1rem;
+  font-size: 0.85rem;
   font-weight: 200;
-  color: #FEFCF3;
-  min-width: 20px;
-  text-align: center;
+  color: #666;
 }
 
 .item-total {

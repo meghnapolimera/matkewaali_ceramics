@@ -1,0 +1,16 @@
+LocksTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: !Sub "matkewaali-locks-${Environment}"
+    BillingMode: PAY_PER_REQUEST
+    KeySchema:
+      - AttributeName: lockId
+        KeyType: HASH
+    AttributeDefinitions:
+      - AttributeName: lockId
+        AttributeType: S
+    TimeToLiveSpecification:
+      AttributeName: expiresAt
+      Enabled: true
+    StreamSpecification:
+      StreamViewType: OLD_IMAGE
