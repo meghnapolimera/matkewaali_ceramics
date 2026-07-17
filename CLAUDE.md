@@ -29,7 +29,7 @@ These must be set up once before deploying. CloudFormation only grants Lambda pe
 # Test (sandbox)
 aws ssm put-parameter \
   --name /matkewaali/square/test/access-token \
-  --value "EAAAlxcxfVH6t07jZcsu1J_AYQZYVAyrp-_x0lSbmFa39HhO9HiVqDss-o0KW2UB" \
+  --value "<sandbox-access-token>" \
   --type SecureString --region us-east-1
 
 # Prod (fill in real value from Square dashboard)
