@@ -28,6 +28,9 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+.vite/
+*.png.screenshot
+frontend/src/assets/Screenshot*
 
 # SAM build artifacts
 .aws-sam/

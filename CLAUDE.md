@@ -4,7 +4,7 @@
 
 ```
 matkewaali/
-├── frontend/          # Vue 3 + TypeScript shop
+├── frontend/    # React 18 + TypeScript shop (Vite)
 ├── backend/           # Lambda function (TypeScript, single handler with internal router)
 └── infrastructure/
     └── backend/       # AWS SAM templates — all cloud resources

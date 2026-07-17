@@ -1,0 +1,108 @@
+.footer {
+  background-color: black;
+  padding: 40px 36px;
+}
+
+.footerContent {
+  max-width: 700px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.footerLabel {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  margin: 0 0 12px;
+  text-align: center;
+}
+
+.subscriptionForm {
+  display: flex;
+  margin: 0;
+  padding: 0;
+}
+
+.emailInput {
+  padding: 10px 14px;
+  margin: 0;
+  background-color: transparent;
+  border: 1px solid #444;
+  margin-right: 8px;
+  color: #FEFCF3;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 200;
+  width: 240px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.emailInput::placeholder {
+  color: #666;
+}
+
+.emailInput:focus {
+  border-color: #FEFCF3;
+}
+
+.submitButton {
+  padding: 10px 20px;
+  margin: 0;
+  color: #FEFCF3;
+  background-color: black;
+  border: 1px solid #444;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+}
+
+.submitButton:hover {
+  background-color: #FEFCF3;
+  color: black;
+  border-color: #FEFCF3;
+}
+
+.subscribedMsg {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  margin: 0;
+  text-align: center;
+}
+
+.footerLinks {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.footerLink {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.footerLink:hover {
+  opacity: 0.6;
+}
+
+.footerIg {
+  font-size: 1.3rem;
+}
+
+.footerDivider {
+  color: #444;
+}

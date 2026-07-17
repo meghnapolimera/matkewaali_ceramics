@@ -1,0 +1,65 @@
+.faqPage {
+  min-height: calc(100vh - 20vh);
+  background-color: black;
+  padding: 0 36px 60px;
+}
+
+.faqContainer {
+  max-width: 700px;
+  margin: 0 auto;
+  padding-top: 32px;
+}
+
+.faqItem {
+  border-bottom: 1px solid #222;
+  cursor: pointer;
+}
+
+.faqItem:first-child {
+  border-top: 1px solid #222;
+}
+
+.faqQuestion {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+  font-family: "Dosis", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  letter-spacing: 0.3px;
+  gap: 16px;
+}
+
+.faqIcon {
+  font-size: 1.2rem;
+  font-weight: 200;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.faqAnswer {
+  padding-bottom: 20px;
+}
+
+.faqAnswer p {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 200;
+  color: #ccc;
+  line-height: 1.75;
+  margin: 0;
+  text-align: justify;
+}
+
+.faqImages {
+  display: flex;
+  gap: 20px;
+  margin-top: 48px;
+}
+
+.faqImage {
+  width: calc(50% - 10px);
+  height: auto;
+}

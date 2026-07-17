@@ -1,0 +1,73 @@
+.aboutPage {
+  min-height: calc(100vh - 20vh);
+  background-color: black;
+  padding: 40px 30px;
+}
+
+.aboutContainer {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.aboutP {
+  font-family: "Dosis", sans-serif;
+  color: #FEFCF3;
+  font-weight: 200;
+  font-size: 1rem;
+  line-height: 1.7;
+  text-align: justify;
+  margin: 0;
+}
+
+.aboutSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: center;
+}
+
+.aboutGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.aboutGridImg {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+}
+
+.instagramLink {
+  color: #FEFCF3;
+  text-decoration: underline;
+  transition: opacity 0.2s ease;
+}
+
+.instagramLink:hover {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .aboutSplit {
+    grid-template-columns: 1fr;
+  }
+
+  .aboutPage {
+    padding: 40px 20px;
+  }
+}
+
+@media (min-width: 768px) {
+  .aboutPage {
+    padding: 60px 40px;
+  }
+
+  .aboutP {
+    font-size: 1rem;
+  }
+}

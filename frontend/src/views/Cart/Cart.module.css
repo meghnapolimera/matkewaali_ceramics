@@ -1,0 +1,156 @@
+.shopClosedNote {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 200;
+  color: #999;
+  text-align: center;
+  margin: 0;
+}
+
+.cartPage {
+  min-height: calc(100vh - 20vh);
+  background-color: black;
+  padding: 0 36px 40px;
+}
+
+.cartContainer {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.cartEmpty {
+  text-align: center;
+  padding: 60px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.cartEmpty p {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  margin: 0;
+}
+
+.continueLink {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  text-decoration: underline;
+}
+
+.cartItems {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.cartItem {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 0;
+  border-bottom: 1px solid #222;
+}
+
+.itemImage {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+}
+
+.itemImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.itemDetails {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.itemName {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  color: #FEFCF3;
+}
+
+.itemPrice {
+  font-family: "Dosis", sans-serif;
+  font-size: 1rem;
+  font-weight: 200;
+  color: #999;
+}
+
+.itemExpires {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.85rem;
+  font-weight: 200;
+  color: #666;
+}
+
+.itemTotal {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  color: #FEFCF3;
+  min-width: 50px;
+  text-align: right;
+}
+
+.removeBtn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.removeBtn:hover {
+  color: #FEFCF3;
+}
+
+.cartFooter {
+  padding-top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 20px;
+}
+
+.cartTotal {
+  display: flex;
+  gap: 40px;
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 200;
+  color: #FEFCF3;
+}
+
+.checkoutBtn {
+  font-family: "Dosis", sans-serif;
+  font-size: 1.1rem;
+  font-weight: 300;
+  letter-spacing: 1.5px;
+  color: #FEFCF3;
+  background-color: black;
+  border: 1px solid #FEFCF3;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.checkoutBtn:hover {
+  background-color: #FEFCF3;
+  color: black;
+}

@@ -55,7 +55,7 @@ export const api = {
       if (!response.ok) return { shopEnabled: true }
       return response.json()
     } catch {
-      return { shopEnabled: true }  // fail open
+      return { shopEnabled: true }
     }
   },
 
@@ -119,7 +119,7 @@ export const api = {
     })
     if (!response.ok) {
       const data = await response.json().catch(() => ({}))
-      throw new ApiError(data.message ?? 'Failed to send message')
+      throw new ApiError((data as { message?: string }).message ?? 'Failed to send message')
     }
   },
 
@@ -138,7 +138,7 @@ export const api = {
     if (response.status === 409) throw new OrderExpiredError('Cart expired')
     if (response.status === 402) {
       const data = await response.json()
-      throw new PaymentDeclinedError(data.message)
+      throw new PaymentDeclinedError((data as { message: string }).message)
     }
     if (!response.ok) throw new ApiError('Failed to create order')
     return response.json()
