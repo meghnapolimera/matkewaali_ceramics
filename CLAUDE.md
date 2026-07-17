@@ -67,8 +67,8 @@ VITE_IDENTITY_POOL_ID=us-east-1:<id-from-deploy-output>
 VITE_API_URL=https://<api-id>.execute-api.us-east-1.amazonaws.com/api
 VITE_IDENTITY_POOL_ID=us-east-1:<identity-pool-id>
 VITE_AWS_REGION=us-east-1
-VITE_SQUARE_APP_ID=sandbox-sq0idb-1krYjx4chbWW5D4lLu2lRA
-VITE_SQUARE_LOCATION_ID=L5AFZQCQS12DH
+VITE_SQUARE_APP_ID=<sandbox-square-app-id>
+VITE_SQUARE_LOCATION_ID=<sandbox-square-location-id>
 ```
 
 `frontend/.env.production` (committed — used for prod builds):
