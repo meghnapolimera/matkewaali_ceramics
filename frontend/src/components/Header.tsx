@@ -32,6 +32,7 @@ export default function Header() {
         <nav className={isMenuOpen ? styles.navActive : ''}>
           <NavLink to="/" onClick={closeMenu}>Home</NavLink>
           <NavLink to="/products" onClick={closeMenu}>Shop</NavLink>
+          <NavLink to="/stories" onClick={closeMenu}>Stories</NavLink>
           <NavLink to="/about" onClick={closeMenu}>About</NavLink>
         </nav>
         <Link to="/cart" className={styles.cartIcon}>
