@@ -24,7 +24,7 @@ export async function listProducts(): Promise<APIGatewayProxyResult> {
     .map(p => ({ ...p, soldOut: p.quantity === 0 }))
     .sort((a, b) => {
       if (a.soldOut !== b.soldOut) return a.soldOut ? 1 : -1
-      return a.name.localeCompare(b.name)
+      return a.name.localeCompare(b.name, undefined, { numeric: true })
     })
 
   logger.info('Products fetched', { count: products.length })

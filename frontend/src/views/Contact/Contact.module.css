@@ -76,9 +76,7 @@
 }
 
 .contactForm {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
+  display: block;
   width: 100%;
   margin: 0;
   padding: 0;
@@ -89,6 +87,7 @@
   flex-direction: column;
   gap: 6px;
   margin: 0 0 12px;
+  padding: 0;
   width: 100%;
 }
 
@@ -98,6 +97,8 @@
   font-weight: 200;
   color: #FEFCF3;
   letter-spacing: 0.5px;
+  padding: 0;
+  margin: 0;
 }
 
 .field input,
@@ -156,7 +157,8 @@
   background-color: black;
   border: 1px solid #FEFCF3;
   padding: 10px 28px;
-  align-self: stretch;
+  width: 100%;
+  box-sizing: border-box;
   margin: 4px 0 0;
   cursor: pointer;
   transition: background-color 0.2s ease, color 0.2s ease;

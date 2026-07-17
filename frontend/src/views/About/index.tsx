@@ -20,6 +20,8 @@ export default function About() {
           </div>
         </div>
 
+        <p className={styles.aboutP}>The name Matkewaali is Hindi for "woman who sells ceramics." The icon — the Devanagari letter म, the Hindi equivalent of M — is my maker's mark, stamped into the bottom of every piece I make.</p>
+
         <p className={styles.aboutP}>I also draw inspiration from Indian folk and tribal art traditions—including Warli, Gond, Sohrai, Kolam, Bandhani, and Kalamkari. These traditions, which have carried stories of communities for generations through bold geometries and nature-inspired motifs, translate beautifully onto ceramic surfaces. Through slip trailing and pattern work, I honor these visual languages while creating pieces that bridge ancestral patterns with contemporary functional design.</p>
 
         <p className={styles.aboutP}>Being self-taught has shaped my approach through intuitive exploration and deliberate practice, leading to a style that feels both personal and connected to larger artistic traditions.</p>
