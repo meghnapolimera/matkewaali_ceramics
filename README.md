@@ -1,39 +1,25 @@
-# matkewaali
+# Matkewaali Ceramics
 
-This template should help get you started developing with Vue 3 in Vite.
+Website for [matkewaali.com](https://matkewaali.com) — a handmade ceramics shop by Meghna Polimera.
 
-## Recommended IDE Setup
+## Structure
 
-[VSCode](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
-
-## Type Support for `.vue` Imports in TS
-
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
-
-## Customize configuration
-
-See [Vite Configuration Reference](https://vitejs.dev/config/).
-
-## Project Setup
-
-```sh
-npm install
+```
+matkewaali/
+├── frontend/          # React 18 + TypeScript (Vite)
+├── backend/           # AWS Lambda function (TypeScript)
+└── infrastructure/
+    └── backend/       # AWS SAM templates
 ```
 
-### Compile and Hot-Reload for Development
+## Local Development
 
 ```sh
+cd frontend
+npm install
 npm run dev
 ```
 
-### Type-Check, Compile and Minify for Production
+## Deployment
 
-```sh
-npm run build
-```
-
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+See [CLAUDE.md](./CLAUDE.md) for the full developer guide including environment setup, AWS prerequisites, and deploy commands.
