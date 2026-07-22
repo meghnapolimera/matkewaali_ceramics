@@ -123,6 +123,25 @@ export const api = {
     }
   },
 
+  async verifyAddress(body: {
+    line1: string
+    city: string
+    state: string
+    zip: string
+  }): Promise<{ deliverable: boolean | null; standardized?: { line1: string; city: string; state: string; zip: string } }> {
+    try {
+      const response = await signedFetch(`${BASE_URL}/address/verify`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+      })
+      if (!response.ok) return { deliverable: null }
+      return response.json()
+    } catch {
+      return { deliverable: null }
+    }
+  },
+
   async createOrder(body: {
     squarePaymentToken: string
     customerName: string

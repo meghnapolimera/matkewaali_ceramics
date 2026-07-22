@@ -238,6 +238,63 @@
   font-weight: 300;
 }
 
+.addressChecking {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  color: #888;
+  margin: 4px 0 0;
+}
+
+.addressVerified {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  color: #6fcf97;
+  margin: 4px 0 0;
+}
+
+.addressError {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  color: #e57373;
+  margin: 4px 0 0;
+  line-height: 1.5;
+}
+
+.addressSuggestion {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 0;
+  flex-wrap: wrap;
+}
+
+.addressSuggestion p {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  color: #aaa;
+  margin: 0;
+}
+
+.suggestionBtn {
+  font-family: "Dosis", sans-serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  color: #FEFCF3;
+  background: none;
+  border: 1px solid #555;
+  padding: 2px 10px;
+  cursor: pointer;
+  letter-spacing: 1px;
+}
+
+.suggestionBtn:hover {
+  border-color: #FEFCF3;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spinner {
     animation: none;

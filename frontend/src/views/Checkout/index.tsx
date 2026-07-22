@@ -38,6 +38,8 @@ export default function Checkout() {
   const [submittedEmail, setSubmittedEmail] = useState('')
   const [cardError, setCardError] = useState('')
   const [paymentError, setPaymentError] = useState('')
+  const [addressStatus, setAddressStatus] = useState<'idle' | 'checking' | 'verified' | 'undeliverable' | 'unknown'>('idle')
+  const [addressSuggestion, setAddressSuggestion] = useState<{ line1: string; city: string; state: string; zip: string } | null>(null)
   const cardRef = useRef<Awaited<ReturnType<Awaited<ReturnType<typeof window.Square.payments>>['card']>> | null>(null)
   const squareInitialized = useRef(false)
   const formRef = useRef<HTMLFormElement>(null)
@@ -110,6 +112,44 @@ export default function Checkout() {
 
   function handleChange(field: keyof typeof form, value: string) {
     setForm(prev => ({ ...prev, [field]: value }))
+    if (['line1', 'city', 'state', 'zip'].includes(field)) {
+      setAddressStatus('idle')
+      setAddressSuggestion(null)
+    }
+  }
+
+  async function checkAddress() {
+    const { line1, city, state, zip } = form
+    if (!line1 || !city || !state || !zip) return
+    setAddressStatus('checking')
+    setAddressSuggestion(null)
+    const result = await api.verifyAddress({ line1, city, state, zip })
+    if (result.deliverable === null) {
+      setAddressStatus('unknown')
+    } else if (!result.deliverable) {
+      setAddressStatus('undeliverable')
+    } else {
+      setAddressStatus('verified')
+      const s = result.standardized
+      if (s && (
+        s.line1.toUpperCase() !== line1.toUpperCase() ||
+        s.city.toUpperCase() !== city.toUpperCase() ||
+        s.zip !== zip.slice(0, 5)
+      )) {
+        setAddressSuggestion(s)
+      }
+    }
+  }
+
+  function applyAddressSuggestion() {
+    if (!addressSuggestion) return
+    setForm(prev => ({
+      ...prev,
+      line1: addressSuggestion.line1,
+      city: addressSuggestion.city,
+      zip: addressSuggestion.zip,
+    }))
+    setAddressSuggestion(null)
   }
 
   async function submit(e: React.FormEvent) {
@@ -216,7 +256,7 @@ export default function Checkout() {
             <h2 className={styles.sectionTitle}>Shipping Address</h2>
             <label className={styles.field}>
               <span>Address Line 1 <span className={styles.required}>*</span></span>
-              <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} />
+              <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} onBlur={checkAddress} />
             </label>
             <label className={styles.field}>
               <span>Address Line 2 (optional)</span>
@@ -225,20 +265,35 @@ export default function Checkout() {
             <div className={styles.fieldRow}>
               <label className={styles.field}>
                 <span>City <span className={styles.required}>*</span></span>
-                <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} />
+                <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} onBlur={checkAddress} />
               </label>
               <label className={`${styles.field} ${styles.fieldSm}`}>
                 <span>State <span className={styles.required}>*</span></span>
-                <select required value={form.state} onChange={e => handleChange('state', e.target.value)}>
+                <select required value={form.state} onChange={e => handleChange('state', e.target.value)} onBlur={checkAddress}>
                   <option value="" disabled>—</option>
                   {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </label>
               <label className={`${styles.field} ${styles.fieldSm}`}>
                 <span>Zip <span className={styles.required}>*</span></span>
-                <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} />
+                <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} onBlur={checkAddress} />
               </label>
             </div>
+            {addressStatus === 'checking' && (
+              <p className={styles.addressChecking}>Verifying address...</p>
+            )}
+            {addressStatus === 'verified' && !addressSuggestion && (
+              <p className={styles.addressVerified}>Address verified</p>
+            )}
+            {addressStatus === 'verified' && addressSuggestion && (
+              <div className={styles.addressSuggestion}>
+                <p>Did you mean: {addressSuggestion.line1}, {addressSuggestion.city}, {addressSuggestion.state} {addressSuggestion.zip}?</p>
+                <button type="button" onClick={applyAddressSuggestion} className={styles.suggestionBtn}>Use this address</button>
+              </div>
+            )}
+            {addressStatus === 'undeliverable' && (
+              <p className={styles.addressError}>This address does not appear to be valid. Please check that the street address, city, state, and zip are correct.</p>
+            )}
 
             <h2 className={styles.sectionTitle}>Payment</h2>
             <div id="sq-card-element" className={styles.sqCardElement}></div>

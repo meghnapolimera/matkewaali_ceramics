@@ -36,6 +36,8 @@ MatkewaaliServiceFunction:
             Resource:
               - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/square/${Environment}/access-token"
               - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/shop/${Environment}/enabled"
+              - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/usps/${Environment}/consumer-key"
+              - !Sub "arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/matkewaali/usps/${Environment}/consumer-secret"
     Environment:
       Variables:
         PRODUCTS_TABLE: !Sub "matkewaali-products-${Environment}"
@@ -99,6 +101,12 @@ MatkewaaliServiceFunction:
         Properties:
           RestApiId: !Ref MatkewaaliServiceApi
           Path: /subscribe
+          Method: POST
+      VerifyAddress:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /address/verify
           Method: POST
       LockExpiry:
         Type: DynamoDB

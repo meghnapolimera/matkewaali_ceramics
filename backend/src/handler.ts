@@ -10,6 +10,7 @@ import { createOrder } from './routes/create-order'
 import { getConfig } from './routes/get-config'
 import { sendContact } from './routes/send-contact'
 import { subscribe } from './routes/subscribe'
+import { verifyAddress } from './routes/verify-address'
 
 const logger = new Logger({ serviceName: 'matkewaali-service' })
 
@@ -61,6 +62,10 @@ export const handler = async (
 
     if (httpMethod === 'POST' && path === '/subscribe') {
       return await subscribe(apiEvent)
+    }
+
+    if (httpMethod === 'POST' && path === '/address/verify') {
+      return await verifyAddress(apiEvent)
     }
 
     return {
