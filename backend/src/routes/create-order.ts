@@ -6,6 +6,8 @@ import { SquareError } from 'square'
 import { docClient, LOCKS_TABLE, ORDERS_TABLE, SUBSCRIBERS_TABLE } from '../clients/dynamodb'
 import { getSquareClient } from '../clients/square'
 import { sendOrderConfirmation } from '../clients/ses'
+import { BASE_PACKAGING_LBS, PER_ITEM_PACKAGING_LBS } from '../constants'
+import { shippingCostForWeight } from '../shipping'
 
 const logger = new Logger({ serviceName: 'create-order' })
 
@@ -36,6 +38,7 @@ interface LockItem {
   slug: string
   name: string
   price: number
+  weightLbs: number
   cognitoIdentityId: string
   expiresAt: number
 }
@@ -136,7 +139,11 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
   // Step 2: Calculate totals server-side
   const subtotal = locks.reduce((sum, l) => sum + l.price, 0)
   const tax = shippingAddress.state === 'WA' ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0
-  const total = Math.round((subtotal + tax) * 100) / 100
+
+  const totalWeightLbs = locks.reduce((sum, l) => sum + (l.weightLbs ?? 0), 0) + BASE_PACKAGING_LBS + (locks.length * PER_ITEM_PACKAGING_LBS)
+  const shipping = shippingCostForWeight(totalWeightLbs)
+
+  const total = Math.round((subtotal + tax + shipping) * 100) / 100
   const totalCents = Math.round(total * 100)
   const items = locks.map(l => ({ lockId: l.lockId, slug: l.slug, name: l.name, price: l.price }))
 
@@ -153,6 +160,7 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
       items,
       subtotal,
       tax,
+      shipping,
       total,
       status: 'pending',
       createdAt: new Date().toISOString(),
@@ -202,7 +210,7 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
 
   // Step 7: Send confirmation email + add to subscribers (both non-fatal — order is committed)
   await Promise.allSettled([
-    sendOrderConfirmation({ to: customerEmail, customerName, orderId, items, subtotal, tax, total, shippingAddress })
+    sendOrderConfirmation({ to: customerEmail, customerName, orderId, items, subtotal, tax, shipping, total, shippingAddress })
       .catch(e => logger.error('confirmation_email_failed', { orderId, customerEmail, error: e })),
     docClient.send(new PutCommand({
       TableName: SUBSCRIBERS_TABLE,
@@ -215,6 +223,6 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
   return {
     statusCode: 200,
     headers: CORS_HEADERS,
-    body: JSON.stringify({ orderId, squarePaymentId, subtotal, tax, total }),
+    body: JSON.stringify({ orderId, squarePaymentId, subtotal, tax, shipping, total }),
   }
 }

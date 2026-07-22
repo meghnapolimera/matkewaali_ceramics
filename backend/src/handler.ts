@@ -11,6 +11,8 @@ import { getConfig } from './routes/get-config'
 import { sendContact } from './routes/send-contact'
 import { subscribe } from './routes/subscribe'
 import { verifyAddress } from './routes/verify-address'
+import { getShippingRates } from './routes/get-shipping-rates'
+import { cleanupExpiredLocks } from './routes/cleanup-expired-locks'
 
 const logger = new Logger({ serviceName: 'matkewaali-service' })
 
@@ -19,6 +21,11 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult | void> => {
   if ('Records' in event && event.Records?.[0]?.eventSource === 'aws:dynamodb') {
     return handleLockExpiry(event as DynamoDBStreamEvent)
+  }
+
+  if ('source' in event && event.source === 'aws.events') {
+    await cleanupExpiredLocks()
+    return
   }
 
   const apiEvent = event as APIGatewayProxyEvent
@@ -66,6 +73,10 @@ export const handler = async (
 
     if (httpMethod === 'POST' && path === '/address/verify') {
       return await verifyAddress(apiEvent)
+    }
+
+    if (httpMethod === 'POST' && path === '/shipping/rates') {
+      return await getShippingRates(apiEvent)
     }
 
     return {

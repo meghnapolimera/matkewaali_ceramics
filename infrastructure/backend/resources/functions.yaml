@@ -108,6 +108,16 @@ MatkewaaliServiceFunction:
           RestApiId: !Ref MatkewaaliServiceApi
           Path: /address/verify
           Method: POST
+      GetShippingRates:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /shipping/rates
+          Method: POST
+      CleanupExpiredLocks:
+        Type: Schedule
+        Properties:
+          Schedule: rate(15 minutes)
       LockExpiry:
         Type: DynamoDB
         Properties:

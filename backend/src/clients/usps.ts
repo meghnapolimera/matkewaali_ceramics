@@ -31,19 +31,16 @@ async function getToken(): Promise<string> {
       grant_type: 'client_credentials',
       client_id: key,
       client_secret: secret,
-      scope: 'addresses',
     }),
   })
 
   if (!response.ok) {
-    throw new Error(`USPS token request failed: ${response.status}`)
+    const body = await response.text().catch(() => '')
+    throw new Error(`USPS token request failed: ${response.status} ${body}`)
   }
 
   const data = await response.json() as { access_token: string; expires_in: number }
-  _token = {
-    value: data.access_token,
-    expiresAt: Date.now() + data.expires_in * 1000,
-  }
+  _token = { value: data.access_token, expiresAt: Date.now() + data.expires_in * 1000 }
   return _token.value
 }
 
@@ -72,9 +69,7 @@ export async function verifyAddress(params: {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  if (!response.ok) {
-    throw new Error(`USPS address API failed: ${response.status}`)
-  }
+  if (!response.ok) throw new Error(`USPS address API failed: ${response.status}`)
 
   const data = await response.json() as {
     address: UspsAddress

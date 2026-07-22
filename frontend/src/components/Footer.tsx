@@ -51,6 +51,8 @@ export default function Footer() {
             <i className="fab fa-instagram"></i>
           </a>
         </div>
+
+        <p className={styles.copyright}>© {new Date().getFullYear()} Matkewaali Ceramics. All rights reserved.</p>
       </div>
     </footer>
   )

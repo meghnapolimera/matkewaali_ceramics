@@ -161,6 +161,7 @@ export default function ProductDetail() {
           ) : (
             <button className={styles.addToCart} onClick={addToCart}>Add to Cart</button>
           )}
+          <Link to="/products" className={styles.backToShop}>← Go to Shop</Link>
         </div>
       </div>
       {slug && <OtherProducts currentSlug={slug} />}

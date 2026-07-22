@@ -20,6 +20,7 @@ interface OrderConfirmationParams {
   items: Array<{ name: string; price: number }>
   subtotal: number
   tax: number
+  shipping: number
   total: number
   shippingAddress: { line1: string; line2?: string; city: string; state: string; zip: string }
 }
@@ -40,7 +41,7 @@ function emailWrapper(content: string): string {
   `
 }
 
-function orderTable(items: Array<{ name: string; price: number }>, subtotal: number, tax: number, total: number): string {
+function orderTable(items: Array<{ name: string; price: number }>, subtotal: number, tax: number, shipping: number, total: number): string {
   const itemRows = items
     .map(i => `<tr><td style="padding:6px 0;text-align:center">${escapeHtml(i.name)}</td><td style="text-align:center">$${i.price.toFixed(2)}</td></tr>`)
     .join('')
@@ -50,6 +51,7 @@ function orderTable(items: Array<{ name: string; price: number }>, subtotal: num
       <tr><td colspan="2" style="padding-top:12px;border-top:1px solid #eee"></td></tr>
       <tr><td style="text-align:center;color:#999">Subtotal</td><td style="text-align:center;color:#999">$${subtotal.toFixed(2)}</td></tr>
       <tr><td style="text-align:center;color:#999">Tax</td><td style="text-align:center;color:#999">$${tax.toFixed(2)}</td></tr>
+      <tr><td style="text-align:center;color:#999">Shipping</td><td style="text-align:center;color:#999">$${shipping.toFixed(2)}</td></tr>
       <tr><td style="text-align:center;font-weight:bold">Total</td><td style="text-align:center;font-weight:bold">$${total.toFixed(2)}</td></tr>
     </table>
   `
@@ -66,7 +68,7 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
     <p>Hi ${name}, thank you for your order!<br>We'll be in touch with shipping details soon.</p>
 
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Order Summary</h3>
-    ${orderTable(params.items, params.subtotal, params.tax, params.total)}
+    ${orderTable(params.items, params.subtotal, params.tax, params.shipping, params.total)}
 
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Shipping To</h3>
     <p>${addressBlock}</p>
@@ -79,7 +81,7 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
     <p><strong>${name}</strong> (${escapeHtml(params.to)}) placed an order.</p>
 
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Order Summary</h3>
-    ${orderTable(params.items, params.subtotal, params.tax, params.total)}
+    ${orderTable(params.items, params.subtotal, params.tax, params.shipping, params.total)}
 
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Ship To</h3>
     <p>${addressBlock}</p>

@@ -123,6 +123,18 @@ export const api = {
     }
   },
 
+  async getShippingRates(body: {
+    lockIds: string[]
+  }): Promise<{ shippingCost: number }> {
+    const response = await signedFetch(`${BASE_URL}/shipping/rates`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
+    if (!response.ok) throw new ApiError('Failed to fetch shipping rates')
+    return response.json()
+  },
+
   async verifyAddress(body: {
     line1: string
     city: string

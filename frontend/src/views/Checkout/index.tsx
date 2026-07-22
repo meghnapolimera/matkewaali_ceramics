@@ -40,6 +40,8 @@ export default function Checkout() {
   const [paymentError, setPaymentError] = useState('')
   const [addressStatus, setAddressStatus] = useState<'idle' | 'checking' | 'verified' | 'undeliverable' | 'unknown'>('idle')
   const [addressSuggestion, setAddressSuggestion] = useState<{ line1: string; city: string; state: string; zip: string } | null>(null)
+  const [shippingCost, setShippingCost] = useState<number | null>(null)
+  const [shippingLoading, setShippingLoading] = useState(false)
   const cardRef = useRef<Awaited<ReturnType<Awaited<ReturnType<typeof window.Square.payments>>['card']>> | null>(null)
   const squareInitialized = useRef(false)
   const formRef = useRef<HTMLFormElement>(null)
@@ -56,7 +58,7 @@ export default function Checkout() {
 
   const subtotal = useMemo(() => items.reduce((sum, i) => sum + i.price, 0), [items])
   const tax = useMemo(() => form.state === 'WA' ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0, [subtotal, form.state])
-  const total = useMemo(() => Math.round((subtotal + tax) * 100) / 100, [subtotal, tax])
+  const total = useMemo(() => Math.round((subtotal + tax + (shippingCost ?? 0)) * 100) / 100, [subtotal, tax, shippingCost])
 
   useEffect(() => {
     if (!shopEnabled) { navigate('/products'); return }
@@ -115,6 +117,7 @@ export default function Checkout() {
     if (['line1', 'city', 'state', 'zip'].includes(field)) {
       setAddressStatus('idle')
       setAddressSuggestion(null)
+      setShippingCost(null)
     }
   }
 
@@ -128,6 +131,7 @@ export default function Checkout() {
       setAddressStatus('unknown')
     } else if (!result.deliverable) {
       setAddressStatus('undeliverable')
+      setShippingCost(null)
     } else {
       setAddressStatus('verified')
       const s = result.standardized
@@ -137,6 +141,17 @@ export default function Checkout() {
         s.zip !== zip.slice(0, 5)
       )) {
         setAddressSuggestion(s)
+      }
+      setShippingLoading(true)
+      try {
+        const { shippingCost: cost } = await api.getShippingRates({
+          lockIds: items.map(i => i.lockId),
+        })
+        setShippingCost(cost)
+      } catch {
+        setShippingCost(null)
+      } finally {
+        setShippingLoading(false)
       }
     }
   }
@@ -322,6 +337,10 @@ export default function Checkout() {
             <div className={styles.summaryLine}>
               <span>Tax{form.state === 'WA' ? ' (WA 10.25%)' : ''}</span>
               <span>${tax.toFixed(2)}</span>
+            </div>
+            <div className={styles.summaryLine}>
+              <span>Shipping</span>
+              <span>{shippingLoading ? '...' : shippingCost !== null ? `$${shippingCost.toFixed(2)}` : '—'}</span>
             </div>
             <div className={`${styles.summaryLine} ${styles.summaryTotal}`}>
               <span>Total</span>

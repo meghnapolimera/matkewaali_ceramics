@@ -40,7 +40,7 @@ export async function createLock(event: APIGatewayProxyEvent): Promise<APIGatewa
     }
   }
 
-  const { name, price } = productResult.Item as { name: string; price: number }
+  const { name, price, weightLbs } = productResult.Item as { name: string; price: number; weightLbs?: number }
 
   const lockId = randomUUID()
   const expiresAt = Math.floor(Date.now() / 1000) + LOCK_TTL_SECONDS
@@ -60,7 +60,7 @@ export async function createLock(event: APIGatewayProxyEvent): Promise<APIGatewa
         {
           Put: {
             TableName: LOCKS_TABLE,
-            Item: { lockId, slug, name, price, cognitoIdentityId, expiresAt },
+            Item: { lockId, slug, name, price, weightLbs: weightLbs ?? 0, cognitoIdentityId, expiresAt },
           },
         },
       ],

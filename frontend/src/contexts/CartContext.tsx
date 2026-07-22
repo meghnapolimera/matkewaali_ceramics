@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useReducer, useEffect, useRef } from 'react'
+import { api } from '../services/api'
 
 export interface CartItem {
   id: string
@@ -97,7 +98,10 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const expired = items.filter(item => item.lockedUntil < now)
     if (expired.length === 0) return
     dispatch({ type: 'REMOVE_EXPIRED', payload: expired.map(i => i.id) })
-    expired.forEach(item => showToast(`Your reservation for ${item.name} has expired`))
+    expired.forEach(item => {
+      showToast(`Your reservation for ${item.name} has expired`)
+      api.releaseLock(item.lockId)
+    })
   }
 
   useEffect(() => {

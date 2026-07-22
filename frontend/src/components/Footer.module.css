@@ -106,3 +106,12 @@
 .footerDivider {
   color: #444;
 }
+
+.copyright {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.8rem;
+  font-weight: 200;
+  color: #888;
+  margin: 0;
+  text-align: center;
+}
