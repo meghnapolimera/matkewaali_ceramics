@@ -17,3 +17,19 @@
   color: #888;
   font-size: 0.9rem;
 }
+
+.shopLink {
+  margin-top: 16px;
+  font-family: "Dosis", sans-serif;
+  font-size: 0.95rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  text-decoration: none;
+  border-bottom: 1px solid #444;
+  padding-bottom: 2px;
+  transition: border-color 0.2s ease;
+}
+
+.shopLink:hover {
+  border-color: #FEFCF3;
+}

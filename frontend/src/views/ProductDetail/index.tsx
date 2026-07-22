@@ -157,7 +157,7 @@ export default function ProductDetail() {
           ) : inCart ? (
             <button className={styles.soldOutBtn} disabled>In your cart</button>
           ) : product.soldOut || unavailable ? (
-            <button className={styles.soldOutBtn} disabled>Sold Out</button>
+            <button className={styles.soldOutBtn} disabled>Unavailable</button>
           ) : (
             <button className={styles.addToCart} onClick={addToCart}>Add to Cart</button>
           )}

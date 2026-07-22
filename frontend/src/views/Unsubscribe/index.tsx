@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, Link } from 'react-router-dom'
 import { api } from '../../services/api'
 import styles from './Unsubscribe.module.css'
 
@@ -22,6 +22,7 @@ export default function Unsubscribe() {
         <>
           <p>You've been unsubscribed from Matkewaali Ceramics.</p>
           <p className={styles.sub}>You won't receive any further emails from us.</p>
+          <Link to="/products" className={styles.shopLink}>Visit the Shop</Link>
         </>
       )}
       {status === 'error' && (

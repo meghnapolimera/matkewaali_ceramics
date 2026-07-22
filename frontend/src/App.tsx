@@ -20,7 +20,7 @@ export default function App() {
   return (
     <div id="app" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <ScrollToTop />
-      <div className="shipping-banner">We currently ship to the United States only.</div>
+      <div className="shipping-banner">Currently shipping to the United States only.</div>
       <Header />
       {itemCount > 0 && (
         <div className="cart-expiry-banner">

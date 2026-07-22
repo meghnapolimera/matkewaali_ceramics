@@ -80,7 +80,7 @@ export default function Products() {
               <img src={product.imageUrl} alt={product.name} />
               {items.some(i => i.slug === product.slug)
                 ? <div className={styles.soldOutBadge}>In your cart</div>
-                : product.soldOut && <div className={styles.soldOutBadge}>Sold Out</div>
+                : product.soldOut && <div className={styles.soldOutBadge}>Unavailable</div>
               }
             </div>
             <div className={styles.productInfo}>
