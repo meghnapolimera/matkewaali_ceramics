@@ -109,6 +109,23 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
   ])
 }
 
+export async function sendSubscriptionConfirmation(to: string): Promise<void> {
+  const html = emailWrapper(`
+    <h2 style="font-weight:300;letter-spacing:1px">Thanks for subscribing to Matkewaali Ceramics</h2>
+    <p>You're now on the list. You'll hear from me when new pieces are available, when the shop updates, and occasionally about the work and process behind Matkewaali Ceramics.</p>
+    <p style="color:#999;font-size:0.85rem;margin-top:32px">If you'd like to unsubscribe, <a href="https://matkewaali.com/unsubscribe?email=${encodeURIComponent(to)}" style="color:#999">click here</a>.</p>
+  `)
+
+  await ses.send(new SendEmailCommand({
+    Source: FROM_EMAIL,
+    Destination: { ToAddresses: [to] },
+    Message: {
+      Subject: { Data: 'Welcome to Matkewaali Ceramics', Charset: 'UTF-8' },
+      Body: { Html: { Data: html, Charset: 'UTF-8' } },
+    },
+  }))
+}
+
 export async function sendContactEmail(params: ContactEmailParams): Promise<void> {
   const name = escapeHtml(params.name)
   const email = escapeHtml(params.email)

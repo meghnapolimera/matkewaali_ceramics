@@ -102,6 +102,12 @@ MatkewaaliServiceFunction:
           RestApiId: !Ref MatkewaaliServiceApi
           Path: /subscribe
           Method: POST
+      Unsubscribe:
+        Type: Api
+        Properties:
+          RestApiId: !Ref MatkewaaliServiceApi
+          Path: /subscribe
+          Method: DELETE
       VerifyAddress:
         Type: Api
         Properties:

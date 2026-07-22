@@ -1,0 +1,19 @@
+.page {
+  min-height: calc(100vh - 20vh);
+  background-color: black;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 36px;
+  font-family: "Dosis", sans-serif;
+  font-weight: 300;
+  color: #FEFCF3;
+  text-align: center;
+  gap: 8px;
+}
+
+.sub {
+  color: #888;
+  font-size: 0.9rem;
+}

@@ -111,6 +111,14 @@ export const api = {
     })
   },
 
+  async unsubscribe(email: string): Promise<void> {
+    await signedFetch(`${BASE_URL}/subscribe`, {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email }),
+    })
+  },
+
   async sendContact(body: { name: string; email: string; message: string }): Promise<void> {
     const response = await signedFetch(`${BASE_URL}/contact`, {
       method: 'POST',

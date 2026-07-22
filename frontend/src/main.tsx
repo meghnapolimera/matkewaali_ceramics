@@ -16,6 +16,7 @@ import Checkout from './views/Checkout'
 import Terms from './views/Terms'
 import Stories from './views/Stories'
 import Story from './views/Story'
+import Unsubscribe from './views/Unsubscribe'
 import './assets/global.css'
 import './assets/app.css'
 import '@fortawesome/fontawesome-free/css/all.min.css'
@@ -37,6 +38,7 @@ const router = createBrowserRouter([
       { path: 'terms', element: <Terms /> },
       { path: 'stories', element: <Stories /> },
       { path: 'stories/:slug', element: <Story /> },
+      { path: 'unsubscribe', element: <Unsubscribe /> },
     ],
   },
 ])

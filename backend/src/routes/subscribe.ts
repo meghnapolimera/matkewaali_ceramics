@@ -2,6 +2,7 @@ import { APIGatewayProxyEvent, APIGatewayProxyResult } from 'aws-lambda'
 import { PutCommand } from '@aws-sdk/lib-dynamodb'
 import { Logger } from '@aws-lambda-powertools/logger'
 import { docClient } from '../clients/dynamodb'
+import { sendSubscriptionConfirmation } from '../clients/ses'
 
 const logger = new Logger({ serviceName: 'subscribe' })
 const CORS_HEADERS = {
@@ -26,6 +27,8 @@ export async function subscribe(event: APIGatewayProxyEvent): Promise<APIGateway
   }))
 
   logger.info('subscriber_added', { email })
+
+  sendSubscriptionConfirmation(email).catch(e => logger.error('subscription_email_failed', { email, error: e }))
 
   return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ ok: true }) }
 }
