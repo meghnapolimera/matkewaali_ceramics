@@ -28,7 +28,7 @@ export async function subscribe(event: APIGatewayProxyEvent): Promise<APIGateway
 
   logger.info('subscriber_added', { email })
 
-  sendSubscriptionConfirmation(email).catch(e => logger.error('subscription_email_failed', { email, error: e }))
+  await sendSubscriptionConfirmation(email).catch(e => logger.error('subscription_email_failed', { email, error: e }))
 
   return { statusCode: 200, headers: CORS_HEADERS, body: JSON.stringify({ ok: true }) }
 }
