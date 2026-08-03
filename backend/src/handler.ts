@@ -8,7 +8,6 @@ import { deleteLock } from './routes/delete-lock'
 import { handleLockExpiry } from './routes/handle-lock-expiry'
 import { createOrder } from './routes/create-order'
 import { getConfig } from './routes/get-config'
-import { sendContact } from './routes/send-contact'
 import { subscribe } from './routes/subscribe'
 import { unsubscribe } from './routes/unsubscribe'
 import { verifyAddress } from './routes/verify-address'
@@ -62,10 +61,6 @@ export const handler = async (
 
     if (httpMethod === 'POST' && path === '/orders') {
       return await createOrder(apiEvent)
-    }
-
-    if (httpMethod === 'POST' && path === '/contact') {
-      return await sendContact(apiEvent)
     }
 
     if (httpMethod === 'POST' && path === '/subscribe') {

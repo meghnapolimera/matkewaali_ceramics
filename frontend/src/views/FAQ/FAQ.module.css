@@ -53,6 +53,16 @@
   text-align: justify;
 }
 
+.emailLink {
+  color: #ccc;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.emailLink:hover {
+  opacity: 0.7;
+}
+
 .faqImages {
   display: flex;
   gap: 20px;

@@ -119,18 +119,6 @@ export const api = {
     })
   },
 
-  async sendContact(body: { name: string; email: string; message: string }): Promise<void> {
-    const response = await signedFetch(`${BASE_URL}/contact`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(body),
-    })
-    if (!response.ok) {
-      const data = await response.json().catch(() => ({}))
-      throw new ApiError((data as { message?: string }).message ?? 'Failed to send message')
-    }
-  },
-
   async getShippingRates(body: {
     lockIds: string[]
   }): Promise<{ shippingCost: number }> {

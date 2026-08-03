@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, ReactNode } from 'react'
 import blockPrinted from '../../assets/block_printed_planters.jpeg'
 import cowMadhubani from '../../assets/cow_madhubani_planter.jpeg'
 import styles from './FAQ.module.css'
 
-const faqs = [
+const EMAIL = 'meghnapolimera@matkewaali.com'
+const emailLink = <a className={styles.emailLink} href={`mailto:${EMAIL}`}>{EMAIL}</a>
+
+const faqs: { q: string; a: ReactNode }[] = [
   {
     q: 'When do you update your shop?',
     a: "New work is added a few times a year. There's no fixed schedule — it depends on what I'm working on. Follow me on Instagram or subscribe to the newsletter to be the first to know when new pieces go live.",
   },
   {
     q: 'Do you take custom orders?',
-    a: 'Yes! Feel free to get in touch through the contact form with details about what you have in mind.',
+    a: <>Yes! Feel free to get in touch at {emailLink} with details about what you have in mind.</>,
   },
   {
     q: 'Do you ship internationally?',
@@ -22,11 +25,11 @@ const faqs = [
   },
   {
     q: 'Do you work with restaurants or coffee shops?',
-    a: "If you are interested in working together to develop pieces for your restaurant, please get in touch via the contact form explaining what type of tableware you are looking for and details about your restaurant. Please understand that I don't make anything that may fall outside of my usual aesthetic and work solely with my current glaze palette.",
+    a: <>If you are interested in working together to develop pieces for your restaurant, please get in touch at {emailLink} explaining what type of tableware you are looking for and details about your restaurant. Please understand that I don't make anything that may fall outside of my usual aesthetic and work solely with my current glaze palette.</>,
   },
   {
     q: 'Do you work with retailers or galleries?',
-    a: "I'm open to stockist inquiries on a case-by-case basis. Please reach out through the contact form with details about your space and I'll get back to you.",
+    a: <>I'm open to stockist inquiries on a case-by-case basis. Please reach out at {emailLink} with details about your space and I'll get back to you.</>,
   },
 ]
 
