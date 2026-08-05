@@ -22,7 +22,8 @@ interface OrderConfirmationParams {
   tax: number
   shipping: number
   total: number
-  shippingAddress: { line1: string; line2?: string; city: string; state: string; zip: string }
+  pickup?: boolean
+  shippingAddress?: { line1: string; line2?: string; city: string; state: string; zip: string }
 }
 
 interface ContactEmailParams {
@@ -59,19 +60,28 @@ function orderTable(items: Array<{ name: string; price: number }>, subtotal: num
 
 export async function sendOrderConfirmation(params: OrderConfirmationParams): Promise<void> {
   const name = escapeHtml(params.customerName)
-  const addr = params.shippingAddress
-  const addressLine2 = addr.line2 ? `<br>${escapeHtml(addr.line2)}` : ''
-  const addressBlock = `${escapeHtml(addr.line1)}${addressLine2}<br>${escapeHtml(addr.city)}, ${escapeHtml(addr.state)} ${escapeHtml(addr.zip)}`
+
+  const fulfillmentBlock = params.pickup
+    ? '<p>Local pickup — Ballard, Seattle</p>'
+    : (() => {
+        const addr = params.shippingAddress!
+        const addressLine2 = addr.line2 ? `<br>${escapeHtml(addr.line2)}` : ''
+        return `<p>${escapeHtml(addr.line1)}${addressLine2}<br>${escapeHtml(addr.city)}, ${escapeHtml(addr.state)} ${escapeHtml(addr.zip)}</p>`
+      })()
+
+  const customerNextSteps = params.pickup
+    ? "We'll be in touch to arrange your pickup in Ballard, Seattle."
+    : "We'll be in touch with shipping details soon."
 
   const customerHtml = emailWrapper(`
     <h2 style="font-weight:300;letter-spacing:1px">Order Confirmed</h2>
-    <p>Hi ${name}, thank you for your order!<br>We'll be in touch with shipping details soon.</p>
+    <p>Hi ${name}, thank you for your order!<br>${customerNextSteps}</p>
 
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Order Summary</h3>
     ${orderTable(params.items, params.subtotal, params.tax, params.shipping, params.total)}
 
-    <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Shipping To</h3>
-    <p>${addressBlock}</p>
+    <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">${params.pickup ? 'Pickup' : 'Shipping To'}</h3>
+    ${fulfillmentBlock}
 
     <p style="color:#999;font-size:0.85rem;margin-top:32px">Order ID: ${escapeHtml(params.orderId)}</p>
   `)
@@ -83,8 +93,8 @@ export async function sendOrderConfirmation(params: OrderConfirmationParams): Pr
     <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Order Summary</h3>
     ${orderTable(params.items, params.subtotal, params.tax, params.shipping, params.total)}
 
-    <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">Ship To</h3>
-    <p>${addressBlock}</p>
+    <h3 style="font-weight:bold;border-bottom:1px solid #eee;padding-bottom:8px">${params.pickup ? 'Pickup' : 'Ship To'}</h3>
+    ${fulfillmentBlock}
 
     <p style="color:#999;font-size:0.85rem;margin-top:32px">Order ID: ${escapeHtml(params.orderId)}</p>
   `)

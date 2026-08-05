@@ -3,21 +3,18 @@ import { SSMClient, GetParameterCommand } from '@aws-sdk/client-ssm'
 const USPS_BASE = 'https://api.usps.com'
 
 let _token: { value: string; expiresAt: number } | null = null
-let _credentials: { key: string; secret: string } | null = null
 
 async function getCredentials(): Promise<{ key: string; secret: string }> {
-  if (_credentials) return _credentials
   const ssm = new SSMClient({})
   const env = process.env.ENVIRONMENT
   const [keyResult, secretResult] = await Promise.all([
     ssm.send(new GetParameterCommand({ Name: `/matkewaali/usps/${env}/consumer-key`, WithDecryption: true })),
     ssm.send(new GetParameterCommand({ Name: `/matkewaali/usps/${env}/consumer-secret`, WithDecryption: true })),
   ])
-  _credentials = {
+  return {
     key: keyResult.Parameter!.Value!,
     secret: secretResult.Parameter!.Value!,
   }
-  return _credentials
 }
 
 async function getToken(): Promise<string> {
@@ -69,12 +66,7 @@ export async function verifyAddress(params: {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  if (!response.ok) {
-    if (response.status >= 400 && response.status < 500) {
-      return { address: { streetAddress: params.streetAddress, city: params.city, state: params.state, ZIPCode: params.ZIPCode }, dpvConfirmation: 'N' }
-    }
-    throw new Error(`USPS address API failed: ${response.status}`)
-  }
+  if (!response.ok) throw new Error(`USPS address API failed: ${response.status}`)
 
   const data = await response.json() as {
     address: UspsAddress

@@ -10,7 +10,6 @@ import { createOrder } from './routes/create-order'
 import { getConfig } from './routes/get-config'
 import { subscribe } from './routes/subscribe'
 import { unsubscribe } from './routes/unsubscribe'
-import { verifyAddress } from './routes/verify-address'
 import { getShippingRates } from './routes/get-shipping-rates'
 import { cleanupExpiredLocks } from './routes/cleanup-expired-locks'
 
@@ -69,10 +68,6 @@ export const handler = async (
 
     if (httpMethod === 'DELETE' && path === '/subscribe') {
       return await unsubscribe(apiEvent)
-    }
-
-    if (httpMethod === 'POST' && path === '/address/verify') {
-      return await verifyAddress(apiEvent)
     }
 
     if (httpMethod === 'POST' && path === '/shipping/rates') {

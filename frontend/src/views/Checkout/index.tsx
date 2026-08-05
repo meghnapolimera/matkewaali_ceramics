@@ -38,10 +38,9 @@ export default function Checkout() {
   const [submittedEmail, setSubmittedEmail] = useState('')
   const [cardError, setCardError] = useState('')
   const [paymentError, setPaymentError] = useState('')
-  const [addressStatus, setAddressStatus] = useState<'idle' | 'checking' | 'verified' | 'undeliverable' | 'unknown'>('idle')
-  const [addressSuggestion, setAddressSuggestion] = useState<{ line1: string; city: string; state: string; zip: string } | null>(null)
+  const [pickup, setPickup] = useState(false)
   const [shippingCost, setShippingCost] = useState<number | null>(null)
-  const [shippingLoading, setShippingLoading] = useState(false)
+  const [shippingLoading, setShippingLoading] = useState(true)
   const cardRef = useRef<Awaited<ReturnType<Awaited<ReturnType<typeof window.Square.payments>>['card']>> | null>(null)
   const squareInitialized = useRef(false)
   const formRef = useRef<HTMLFormElement>(null)
@@ -57,8 +56,8 @@ export default function Checkout() {
   })
 
   const subtotal = useMemo(() => items.reduce((sum, i) => sum + i.price, 0), [items])
-  const tax = useMemo(() => form.state === 'WA' ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0, [subtotal, form.state])
-  const total = useMemo(() => Math.round((subtotal + tax + (shippingCost ?? 0)) * 100) / 100, [subtotal, tax, shippingCost])
+  const tax = useMemo(() => (pickup || form.state === 'WA') ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0, [subtotal, form.state, pickup])
+  const total = useMemo(() => Math.round((subtotal + tax + (pickup ? 0 : (shippingCost ?? 0))) * 100) / 100, [subtotal, tax, pickup, shippingCost])
 
   useEffect(() => {
     if (!shopEnabled) { navigate('/products'); return }
@@ -109,72 +108,23 @@ export default function Checkout() {
       }
     }
 
-    initSquare()
-  }, [shopEnabled, items.length, navigate])
-
-  function handleChange(field: keyof typeof form, value: string) {
-    setForm(prev => ({ ...prev, [field]: value }))
-    if (['line1', 'city', 'state', 'zip'].includes(field)) {
-      setAddressStatus('idle')
-      setAddressSuggestion(null)
-      setShippingCost(null)
-    }
-  }
-
-  useEffect(() => {
-    if (!form.line1 || !form.city || !form.state || !form.zip) return
-    const timer = setTimeout(checkAddress, 600)
-    return () => clearTimeout(timer)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [form.line1, form.city, form.state, form.zip])
-
-  async function checkAddress(): Promise<'verified' | 'undeliverable' | 'unknown' | 'incomplete'> {
-    const { line1, city, state, zip } = form
-    if (!line1 || !city || !state || !zip) return 'incomplete'
-    setAddressStatus('checking')
-    setAddressSuggestion(null)
-    const result = await api.verifyAddress({ line1, city, state, zip })
-    if (result.deliverable === null) {
-      setAddressStatus('unknown')
-      return 'unknown'
-    } else if (!result.deliverable) {
-      setAddressStatus('undeliverable')
-      setShippingCost(null)
-      return 'undeliverable'
-    } else {
-      setAddressStatus('verified')
-      const s = result.standardized
-      if (s && (
-        s.line1.toUpperCase() !== line1.toUpperCase() ||
-        s.city.toUpperCase() !== city.toUpperCase() ||
-        s.zip !== zip.slice(0, 5)
-      )) {
-        setAddressSuggestion(s)
-      }
-      setShippingLoading(true)
+    async function loadShipping() {
       try {
-        const { shippingCost: cost } = await api.getShippingRates({
-          lockIds: items.map(i => i.lockId),
-        })
+        const { shippingCost: cost } = await api.getShippingRates({ lockIds: items.map(i => i.lockId) })
         setShippingCost(cost)
       } catch {
         setShippingCost(null)
       } finally {
         setShippingLoading(false)
       }
-      return 'verified'
     }
-  }
 
-  function applyAddressSuggestion() {
-    if (!addressSuggestion) return
-    setForm(prev => ({
-      ...prev,
-      line1: addressSuggestion.line1,
-      city: addressSuggestion.city,
-      zip: addressSuggestion.zip,
-    }))
-    setAddressSuggestion(null)
+    initSquare()
+    loadShipping()
+  }, [shopEnabled, items.length, navigate])
+
+  function handleChange(field: keyof typeof form, value: string) {
+    setForm(prev => ({ ...prev, [field]: value }))
   }
 
   async function submit(e: React.FormEvent) {
@@ -189,11 +139,8 @@ export default function Checkout() {
       return
     }
 
-    const currentAddressStatus = (addressStatus === 'idle' || addressStatus === 'checking')
-      ? await checkAddress()
-      : addressStatus
-    if (currentAddressStatus === 'undeliverable') {
-      setPaymentError('Please enter a valid delivery address before placing your order.')
+    if (!pickup && shippingCost === null) {
+      setPaymentError('Unable to calculate shipping. Please refresh and try again.')
       return
     }
 
@@ -217,7 +164,8 @@ export default function Checkout() {
         squarePaymentToken: result.token,
         customerName: form.customerName,
         customerEmail: form.customerEmail,
-        shippingAddress: {
+        pickup: pickup || undefined,
+        shippingAddress: pickup ? undefined : {
           line1: form.line1,
           line2: form.line2 || undefined,
           city: form.city,
@@ -286,46 +234,48 @@ export default function Checkout() {
               </label>
             </div>
 
-            <h2 className={styles.sectionTitle}>Shipping Address</h2>
-            <label className={styles.field}>
-              <span>Address Line 1 <span className={styles.required}>*</span></span>
-              <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} />
-            </label>
-            <label className={styles.field}>
-              <span>Address Line 2 (optional)</span>
-              <input type="text" value={form.line2} onChange={e => handleChange('line2', e.target.value)} />
-            </label>
-            <div className={styles.fieldRow}>
-              <label className={styles.field}>
-                <span>City <span className={styles.required}>*</span></span>
-                <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} />
-              </label>
-              <label className={`${styles.field} ${styles.fieldSm}`}>
-                <span>State <span className={styles.required}>*</span></span>
-                <select required value={form.state} onChange={e => handleChange('state', e.target.value)}>
-                  <option value="" disabled>—</option>
-                  {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
-                </select>
-              </label>
-              <label className={`${styles.field} ${styles.fieldSm}`}>
-                <span>Zip <span className={styles.required}>*</span></span>
-                <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} />
-              </label>
+            <h2 className={styles.sectionTitle}>Delivery</h2>
+            <div className={styles.deliveryOptions}>
+              <button type="button" className={`${styles.deliveryOption} ${!pickup ? styles.deliveryOptionActive : ''}`} onClick={() => setPickup(false)}>
+                Ship to me
+              </button>
+              <button type="button" className={`${styles.deliveryOption} ${pickup ? styles.deliveryOptionActive : ''}`} onClick={() => setPickup(true)}>
+                Local pickup — Ballard, Seattle
+              </button>
             </div>
-            {addressStatus === 'checking' && (
-              <p className={styles.addressChecking}>Verifying address...</p>
+
+            {pickup && (
+              <p className={styles.pickupNote}>Pickup details will be provided via email — please make sure to enter a valid email address.</p>
             )}
-            {addressStatus === 'verified' && !addressSuggestion && (
-              <p className={styles.addressVerified}>Address verified</p>
-            )}
-            {addressStatus === 'verified' && addressSuggestion && (
-              <div className={styles.addressSuggestion}>
-                <p>Did you mean: {addressSuggestion.line1}, {addressSuggestion.city}, {addressSuggestion.state} {addressSuggestion.zip}?</p>
-                <button type="button" onClick={applyAddressSuggestion} className={styles.suggestionBtn}>Use this address</button>
-              </div>
-            )}
-            {addressStatus === 'undeliverable' && (
-              <p className={styles.addressError}>This address does not appear to be valid. Please check that the street address, city, state, and zip are correct.</p>
+
+            {!pickup && (
+              <>
+                <label className={styles.field}>
+                  <span>Address Line 1 <span className={styles.required}>*</span></span>
+                  <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} />
+                </label>
+                <label className={styles.field}>
+                  <span>Address Line 2 (optional)</span>
+                  <input type="text" value={form.line2} onChange={e => handleChange('line2', e.target.value)} />
+                </label>
+                <div className={styles.fieldRow}>
+                  <label className={styles.field}>
+                    <span>City <span className={styles.required}>*</span></span>
+                    <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} />
+                  </label>
+                  <label className={`${styles.field} ${styles.fieldSm}`}>
+                    <span>State <span className={styles.required}>*</span></span>
+                    <select required value={form.state} onChange={e => handleChange('state', e.target.value)}>
+                      <option value="" disabled>—</option>
+                      {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
+                    </select>
+                  </label>
+                  <label className={`${styles.field} ${styles.fieldSm}`}>
+                    <span>Zip <span className={styles.required}>*</span></span>
+                    <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} />
+                  </label>
+                </div>
+              </>
             )}
 
             <h2 className={styles.sectionTitle}>Payment</h2>
@@ -333,8 +283,8 @@ export default function Checkout() {
             {cardError && <p className={styles.fieldError}>{cardError}</p>}
             {paymentError && <p className={styles.fieldError}>{paymentError}</p>}
 
-            <button type="submit" className={styles.submitBtn} disabled={step === 'processing'}>
-              {step === 'processing' ? <span className={styles.spinner} /> : `Place Order — $${total.toFixed(2)}`}
+            <button type="submit" className={styles.submitBtn} disabled={step === 'processing' || (!pickup && shippingLoading)}>
+              {step === 'processing' || (!pickup && shippingLoading) ? <span className={styles.spinner} /> : `Place Order — $${total.toFixed(2)}`}
             </button>
           </form>
 
@@ -358,7 +308,7 @@ export default function Checkout() {
             </div>
             <div className={styles.summaryLine}>
               <span>Shipping</span>
-              <span>{shippingLoading ? '...' : shippingCost !== null ? `$${shippingCost.toFixed(2)}` : '—'}</span>
+              <span>{pickup ? 'Free' : shippingLoading ? '...' : shippingCost !== null ? `$${shippingCost.toFixed(2)}` : '—'}</span>
             </div>
             <div className={`${styles.summaryLine} ${styles.summaryTotal}`}>
               <span>Total</span>

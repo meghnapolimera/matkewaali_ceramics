@@ -75,12 +75,14 @@ function validateRequest(body: Record<string, unknown>): string | null {
   if (!body.customerEmail || typeof body.customerEmail !== 'string') return 'customerEmail is required'
   if (!body.lockIds || !Array.isArray(body.lockIds) || body.lockIds.length === 0) return 'lockIds must be a non-empty array'
 
-  const addr = body.shippingAddress as ShippingAddress | undefined
-  if (!addr) return 'shippingAddress is required'
-  if (!addr.line1) return 'shippingAddress.line1 is required'
-  if (!addr.city) return 'shippingAddress.city is required'
-  if (!addr.state || !US_STATES.has(addr.state)) return 'shippingAddress.state must be a valid US state code'
-  if (!addr.zip || !/^\d{5}(-\d{4})?$/.test(addr.zip)) return 'shippingAddress.zip must be a valid US zip code'
+  if (body.pickup !== true) {
+    const addr = body.shippingAddress as ShippingAddress | undefined
+    if (!addr) return 'shippingAddress is required'
+    if (!addr.line1) return 'shippingAddress.line1 is required'
+    if (!addr.city) return 'shippingAddress.city is required'
+    if (!addr.state || !US_STATES.has(addr.state)) return 'shippingAddress.state must be a valid US state code'
+    if (!addr.zip || !/^\d{5}(-\d{4})?$/.test(addr.zip)) return 'shippingAddress.zip must be a valid US zip code'
+  }
 
   return null
 }
@@ -108,12 +110,13 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
     return { statusCode: 400, headers: CORS_HEADERS, body: JSON.stringify({ message: validationError }) }
   }
 
-  const { squarePaymentToken, customerName, customerEmail, lockIds, shippingAddress } = body as {
+  const { squarePaymentToken, customerName, customerEmail, lockIds, shippingAddress, pickup } = body as {
     squarePaymentToken: string
     customerName: string
     customerEmail: string
     lockIds: string[]
-    shippingAddress: ShippingAddress
+    shippingAddress?: ShippingAddress
+    pickup?: boolean
   }
 
   // Step 1: Validate all locks exist and have not expired
@@ -138,10 +141,10 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
 
   // Step 2: Calculate totals server-side
   const subtotal = locks.reduce((sum, l) => sum + l.price, 0)
-  const tax = shippingAddress.state === 'WA' ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0
+  const tax = (pickup || shippingAddress?.state === 'WA') ? Math.round(subtotal * WA_TAX_RATE * 100) / 100 : 0
 
   const totalWeightLbs = locks.reduce((sum, l) => sum + (l.weightLbs ?? 0), 0) + BASE_PACKAGING_LBS + (locks.length * PER_ITEM_PACKAGING_LBS)
-  const shipping = shippingCostForWeight(totalWeightLbs)
+  const shipping = pickup ? 0 : shippingCostForWeight(totalWeightLbs)
 
   const total = Math.round((subtotal + tax + shipping) * 100) / 100
   const totalCents = Math.round(total * 100)
@@ -156,7 +159,7 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
       orderId,
       customerName,
       customerEmail,
-      shippingAddress,
+      ...(pickup ? { pickup: true } : { shippingAddress }),
       items,
       subtotal,
       tax,
@@ -210,7 +213,7 @@ export async function createOrder(event: APIGatewayProxyEvent): Promise<APIGatew
 
   // Step 7: Send confirmation email + add to subscribers (both non-fatal — order is committed)
   await Promise.allSettled([
-    sendOrderConfirmation({ to: customerEmail, customerName, orderId, items, subtotal, tax, shipping, total, shippingAddress })
+    sendOrderConfirmation({ to: customerEmail, customerName, orderId, items, subtotal, tax, shipping, total, pickup, shippingAddress })
       .catch(e => logger.error('confirmation_email_failed', { orderId, customerEmail, error: e })),
     docClient.send(new PutCommand({
       TableName: SUBSCRIBERS_TABLE,

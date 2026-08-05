@@ -131,30 +131,12 @@ export const api = {
     return response.json()
   },
 
-  async verifyAddress(body: {
-    line1: string
-    city: string
-    state: string
-    zip: string
-  }): Promise<{ deliverable: boolean | null; standardized?: { line1: string; city: string; state: string; zip: string } }> {
-    try {
-      const response = await signedFetch(`${BASE_URL}/address/verify`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body),
-      })
-      if (!response.ok) return { deliverable: null }
-      return response.json()
-    } catch {
-      return { deliverable: null }
-    }
-  },
-
   async createOrder(body: {
     squarePaymentToken: string
     customerName: string
     customerEmail: string
-    shippingAddress: { line1: string; line2?: string; city: string; state: string; zip: string }
+    pickup?: boolean
+    shippingAddress?: { line1: string; line2?: string; city: string; state: string; zip: string }
     lockIds: string[]
   }): Promise<{ orderId: string; squarePaymentId: string; subtotal: number; tax: number; total: number }> {
     const response = await signedFetch(`${BASE_URL}/orders`, {
