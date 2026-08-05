@@ -121,17 +121,26 @@ export default function Checkout() {
     }
   }
 
-  async function checkAddress() {
+  useEffect(() => {
+    if (!form.line1 || !form.city || !form.state || !form.zip) return
+    const timer = setTimeout(checkAddress, 600)
+    return () => clearTimeout(timer)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.line1, form.city, form.state, form.zip])
+
+  async function checkAddress(): Promise<'verified' | 'undeliverable' | 'unknown' | 'incomplete'> {
     const { line1, city, state, zip } = form
-    if (!line1 || !city || !state || !zip) return
+    if (!line1 || !city || !state || !zip) return 'incomplete'
     setAddressStatus('checking')
     setAddressSuggestion(null)
     const result = await api.verifyAddress({ line1, city, state, zip })
     if (result.deliverable === null) {
       setAddressStatus('unknown')
+      return 'unknown'
     } else if (!result.deliverable) {
       setAddressStatus('undeliverable')
       setShippingCost(null)
+      return 'undeliverable'
     } else {
       setAddressStatus('verified')
       const s = result.standardized
@@ -153,6 +162,7 @@ export default function Checkout() {
       } finally {
         setShippingLoading(false)
       }
+      return 'verified'
     }
   }
 
@@ -176,6 +186,14 @@ export default function Checkout() {
 
     if (!cardRef.current) {
       setCardError('Payment form is not ready yet. Please wait a moment and try again.')
+      return
+    }
+
+    const currentAddressStatus = (addressStatus === 'idle' || addressStatus === 'checking')
+      ? await checkAddress()
+      : addressStatus
+    if (currentAddressStatus === 'undeliverable') {
+      setPaymentError('Please enter a valid delivery address before placing your order.')
       return
     }
 
@@ -271,7 +289,7 @@ export default function Checkout() {
             <h2 className={styles.sectionTitle}>Shipping Address</h2>
             <label className={styles.field}>
               <span>Address Line 1 <span className={styles.required}>*</span></span>
-              <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} onBlur={checkAddress} />
+              <input type="text" required value={form.line1} onChange={e => handleChange('line1', e.target.value)} />
             </label>
             <label className={styles.field}>
               <span>Address Line 2 (optional)</span>
@@ -280,18 +298,18 @@ export default function Checkout() {
             <div className={styles.fieldRow}>
               <label className={styles.field}>
                 <span>City <span className={styles.required}>*</span></span>
-                <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} onBlur={checkAddress} />
+                <input type="text" required value={form.city} onChange={e => handleChange('city', e.target.value)} />
               </label>
               <label className={`${styles.field} ${styles.fieldSm}`}>
                 <span>State <span className={styles.required}>*</span></span>
-                <select required value={form.state} onChange={e => handleChange('state', e.target.value)} onBlur={checkAddress}>
+                <select required value={form.state} onChange={e => handleChange('state', e.target.value)}>
                   <option value="" disabled>—</option>
                   {US_STATES.map(s => <option key={s} value={s}>{s}</option>)}
                 </select>
               </label>
               <label className={`${styles.field} ${styles.fieldSm}`}>
                 <span>Zip <span className={styles.required}>*</span></span>
-                <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} onBlur={checkAddress} />
+                <input type="text" pattern="^\d{5}(-\d{4})?$" required placeholder="12345" value={form.zip} onChange={e => handleChange('zip', e.target.value)} />
               </label>
             </div>
             {addressStatus === 'checking' && (

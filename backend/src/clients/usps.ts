@@ -69,7 +69,12 @@ export async function verifyAddress(params: {
     headers: { Authorization: `Bearer ${token}` },
   })
 
-  if (!response.ok) throw new Error(`USPS address API failed: ${response.status}`)
+  if (!response.ok) {
+    if (response.status >= 400 && response.status < 500) {
+      return { address: { streetAddress: params.streetAddress, city: params.city, state: params.state, ZIPCode: params.ZIPCode }, dpvConfirmation: 'N' }
+    }
+    throw new Error(`USPS address API failed: ${response.status}`)
+  }
 
   const data = await response.json() as {
     address: UspsAddress
