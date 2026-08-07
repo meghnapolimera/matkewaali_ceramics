@@ -2,6 +2,7 @@ import { useState, ReactNode } from 'react'
 import blockPrinted from '../../assets/block_printed_planters.jpeg'
 import cowMadhubani from '../../assets/cow_madhubani_planter.jpeg'
 import styles from './FAQ.module.css'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 const EMAIL = 'meghnapolimera@matkewaali.com'
 const emailLink = <a className={styles.emailLink} href={`mailto:${EMAIL}`}>{EMAIL}</a>
@@ -34,6 +35,10 @@ const faqs: { q: string; a: ReactNode }[] = [
 ]
 
 export default function FAQ() {
+  usePageMeta(
+    'FAQ — Matkewaali Ceramics',
+    'Frequently asked questions about Matkewaali Ceramics — shipping, materials, care instructions, and more.',
+  )
   const [open, setOpen] = useState<string | null>(null)
 
   function toggle(q: string) {

@@ -3,8 +3,13 @@ import funPlanter2 from '../../assets/fun_planter_2.jpeg'
 import funPlanter3 from '../../assets/fun_planter_3.jpeg'
 import funPlanter4 from '../../assets/fun_planter_4.jpeg'
 import styles from './About.module.css'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 export default function About() {
+  usePageMeta(
+    'About — Matkewaali Ceramics | Seattle',
+    'Learn about Meghna Polimera, the artist behind Matkewaali Ceramics. Ceramic artist based in Seattle making handmade ceramics.',
+  )
   return (
     <div className={styles.aboutPage}>
       <div className={styles.aboutContainer}>

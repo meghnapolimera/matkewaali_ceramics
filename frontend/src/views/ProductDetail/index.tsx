@@ -4,6 +4,7 @@ import { api, type Product, NotFoundError, ApiError, LockConflictError } from '.
 import { useCart } from '../../contexts/CartContext'
 import { useShop } from '../../contexts/ShopContext'
 import styles from './ProductDetail.module.css'
+import { usePageMeta, type ProductMeta } from '../../hooks/usePageMeta'
 
 function OtherProducts({ currentSlug }: { currentSlug: string }) {
   const [others, setOthers] = useState<Product[]>([])
@@ -22,7 +23,7 @@ function OtherProducts({ currentSlug }: { currentSlug: string }) {
       <div className={styles.otherScroll}>
         {others.map(p => (
           <Link key={p.slug} to={`/products/${p.slug}`} className={styles.otherCard}>
-            <img src={p.imageUrl} alt={p.name} className={styles.otherImg} />
+            <img src={p.imageUrl} alt={p.altText ?? p.name} className={styles.otherImg} />
             <div className={styles.otherInfo}>
               <span className={styles.otherName}>{p.name}</span>
               <span className={styles.otherPrice}>${p.price}</span>
@@ -44,6 +45,22 @@ export default function ProductDetail() {
   const [unavailable, setUnavailable] = useState(false)
   const { items, addItem, expiredVersion } = useCart()
   const inCart = items.some(i => i.slug === slug)
+
+  const productMeta: ProductMeta | undefined = product ? {
+    name: product.name,
+    description: `${product.description} Individually handmade in Seattle, WA.`,
+    image: product.imageUrl,
+    price: product.price,
+    availability: product.soldOut ? 'OutOfStock' : 'InStock',
+    url: `https://matkewaali.com/products/${product.slug}`,
+  } : undefined
+
+  usePageMeta(
+    product ? `${product.name} — Handmade Ceramics | Matkewaali Seattle` : 'Matkewaali Ceramics',
+    product ? `${product.description} Individually handmade in Seattle, WA.` : '',
+    product?.imageUrl,
+    productMeta,
+  )
 
   async function loadProduct() {
     if (!slug) return
@@ -128,7 +145,7 @@ export default function ProductDetail() {
     <div className={styles.productDetail}>
       <div className={styles.productContainer}>
         <div className={styles.productImage}>
-          <img src={product.imageUrl} alt={product.name} loading="lazy" />
+          <img src={product.imageUrl} alt={product.altText ?? product.name} loading="lazy" />
         </div>
 
         <div className={styles.productInfo}>

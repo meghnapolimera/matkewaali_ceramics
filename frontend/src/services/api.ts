@@ -13,6 +13,7 @@ export interface Product {
   width: string
   volume: string
   imageUrl: string
+  altText?: string
   quantity: number
   isActive: boolean
   soldOut: boolean

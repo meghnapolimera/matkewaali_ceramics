@@ -4,8 +4,13 @@ import kolam2 from '../../assets/kolam_planter_2.png'
 import kolam3 from '../../assets/kolam_planter_3.png'
 import kolam4 from '../../assets/kolam_planter_4.png'
 import styles from './Contact.module.css'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 export default function Contact() {
+  usePageMeta(
+    'Contact — Matkewaali Ceramics',
+    'Get in touch with Matkewaali Ceramics. Questions about orders, pieces, or collaborations — reach out by email.',
+  )
   return (
     <div className={styles.contactPage}>
       <div className={styles.contactContainer}>

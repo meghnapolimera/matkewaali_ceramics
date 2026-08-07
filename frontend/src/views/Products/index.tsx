@@ -4,8 +4,13 @@ import { api, type Product, ApiError } from '../../services/api'
 import { useShop } from '../../contexts/ShopContext'
 import { useCart } from '../../contexts/CartContext'
 import styles from './Products.module.css'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 export default function Products() {
+  usePageMeta(
+    'Shop — Handmade Ceramics | Matkewaali Seattle',
+    'Shop handmade ceramics. Each piece is individually crafted in Seattle, WA.',
+  )
   const { shopEnabled } = useShop()
   const { items, expiredVersion } = useCart()
   const [products, setProducts] = useState<Product[]>([])
@@ -77,7 +82,7 @@ export default function Products() {
             className={styles.productCard}
           >
             <div className={`${styles.productThumbnail}${product.soldOut && !items.some(i => i.slug === product.slug) ? ` ${styles.isSoldOut}` : ''}`}>
-              <img src={product.imageUrl} alt={product.name} />
+              <img src={product.imageUrl} alt={product.altText ?? product.name} />
               {items.some(i => i.slug === product.slug)
                 ? <div className={styles.soldOutBadge}>In your cart</div>
                 : product.soldOut && <div className={styles.soldOutBadge}>Unavailable</div>

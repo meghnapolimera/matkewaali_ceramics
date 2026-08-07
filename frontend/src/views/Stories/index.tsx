@@ -1,8 +1,13 @@
 import { Link } from 'react-router-dom'
 import stories from '../../data/stories'
 import styles from './Stories.module.css'
+import { usePageMeta } from '../../hooks/usePageMeta'
 
 export default function Stories() {
+  usePageMeta(
+    'Stories — Matkewaali Ceramics',
+    'Stories and process behind Matkewaali Ceramics — the making, the materials, and the ideas.',
+  )
   return (
     <div className={styles.storiesPage}>
       <div className={styles.storiesContainer}>
