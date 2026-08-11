@@ -10,7 +10,6 @@ import Contact from './views/Contact'
 import FAQ from './views/FAQ'
 import Products from './views/Products'
 import ProductDetail from './views/ProductDetail'
-import PrintCards from './views/PrintCards'
 import Cart from './views/Cart'
 import Checkout from './views/Checkout'
 import Terms from './views/Terms'
@@ -32,7 +31,6 @@ const router = createBrowserRouter([
       { path: 'faq', element: <FAQ /> },
       { path: 'products', element: <Products /> },
       { path: 'products/:slug', element: <ProductDetail /> },
-      { path: 'print-cards', element: <PrintCards /> },
       { path: 'cart', element: <Cart /> },
       { path: 'checkout', element: <Checkout /> },
       { path: 'terms', element: <Terms /> },

@@ -19,17 +19,19 @@ END=$(python3 -c "import time; print(int(time.time()))")
 
 3. Run all four queries in parallel using `aws logs start-query`, then poll each with `aws logs get-query-results --query-id ID --region us-east-1` until `status` is `Complete` (poll every 2 seconds, up to 15 seconds).
 
+**Owner IP filtering:** Check memory for the owner IP and add `| filter ip != "<owner-ip>"` to all API access log queries. Lambda log queries don't have an ip field so they can't be filtered by IP.
+
 **Query 1 — Unique visitors** (API access log group):
 ```
 fields cognitoId
-| filter cognitoId not like "" and cognitoId != "-"
+| filter cognitoId not like "" and cognitoId != "-" and httpMethod != "OPTIONS" and ip != "<owner-ip>"
 | stats count_distinct(cognitoId) as unique_visitors
 ```
 
 **Query 2 — Top pages by views** (API access log group):
 ```
 fields path, status
-| filter status = 200 and not path like "/analytics"
+| filter status = 200 and not (path like "/analytics") and ip != "<owner-ip>"
 | stats count() as views by path
 | sort views desc
 | limit 10

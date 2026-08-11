@@ -23,7 +23,7 @@ function OtherProducts({ currentSlug }: { currentSlug: string }) {
       <div className={styles.otherScroll}>
         {others.map(p => (
           <Link key={p.slug} to={`/products/${p.slug}`} className={styles.otherCard}>
-            <img src={p.imageUrl} alt={p.altText ?? p.name} className={styles.otherImg} />
+            <img src={p.images?.[0] ?? p.imageUrl} alt={p.altText ?? p.name} className={styles.otherImg} />
             <div className={styles.otherInfo}>
               <span className={styles.otherName}>{p.name}</span>
               <span className={styles.otherPrice}>${p.price}</span>
@@ -43,13 +43,16 @@ export default function ProductDetail() {
   const [notFound, setNotFound] = useState(false)
   const [error, setError] = useState(false)
   const [unavailable, setUnavailable] = useState(false)
-  const { items, addItem, expiredVersion } = useCart()
-  const inCart = items.some(i => i.slug === slug)
+  const [activeIndex, setActiveIndex] = useState(0)
+  const { items, addItem, removeItem, expiredVersion } = useCart()
+  const inCartCount = items.filter(i => i.slug === slug).length
+
+  const images = product ? (product.images ?? [product.imageUrl]) : []
 
   const productMeta: ProductMeta | undefined = product ? {
     name: product.name,
     description: `${product.description} Individually handmade in Seattle, WA.`,
-    image: product.imageUrl,
+    image: images[0] ?? product.imageUrl,
     price: product.price,
     availability: product.soldOut ? 'OutOfStock' : 'InStock',
     url: `https://matkewaali.com/products/${product.slug}`,
@@ -58,7 +61,7 @@ export default function ProductDetail() {
   usePageMeta(
     product ? `${product.name} — Handmade Ceramics | Matkewaali Seattle` : 'Matkewaali Ceramics',
     product ? `${product.description} Individually handmade in Seattle, WA.` : '',
-    product?.imageUrl,
+    images[0],
     productMeta,
   )
 
@@ -67,6 +70,7 @@ export default function ProductDetail() {
     setLoading(true)
     setNotFound(false)
     setError(false)
+    setActiveIndex(0)
     try {
       const data = await api.getProduct(slug)
       setProduct(data)
@@ -85,19 +89,29 @@ export default function ProductDetail() {
     loadProduct()
   }, [slug, expiredVersion])
 
+  function removeOneFromCart() {
+    const item = items.find(i => i.slug === slug)
+    if (!item) return
+    api.releaseLock(item.lockId)
+    removeItem(item.id)
+    setUnavailable(false)
+    setProduct(p => p ? { ...p, quantity: p.quantity + 1 } : p)
+  }
+
   async function addToCart() {
     if (!product) return
     try {
       const { lockId, expiresAt } = await api.createLock(product.slug)
       addItem({
-        id: product.slug,
+        id: lockId,
         slug: product.slug,
         name: product.name,
         price: product.price,
-        image: product.imageUrl,
+        image: images[0] ?? product.imageUrl,
         lockId,
         lockedUntil: expiresAt * 1000,
       })
+      setProduct(p => p ? { ...p, quantity: p.quantity - 1 } : p)
       api.recordEvent('add_to_cart', { slug: product.slug })
     } catch (e) {
       if (e instanceof LockConflictError) {
@@ -141,11 +155,43 @@ export default function ProductDetail() {
 
   if (!product) return null
 
+  const hasMultiple = images.length > 1
+
   return (
     <div className={styles.productDetail}>
       <div className={styles.productContainer}>
         <div className={styles.productImage}>
-          <img src={product.imageUrl} alt={product.altText ?? product.name} loading="lazy" />
+          <div className={styles.mainImageWrap}>
+            {hasMultiple && (
+              <button
+                className={`${styles.arrow} ${styles.arrowLeft}`}
+                onClick={() => setActiveIndex(i => (i - 1 + images.length) % images.length)}
+                aria-label="Previous image"
+              >&#8249;</button>
+            )}
+            <img src={images[activeIndex]} alt={product.altText ?? product.name} loading="lazy" />
+            {hasMultiple && (
+              <button
+                className={`${styles.arrow} ${styles.arrowRight}`}
+                onClick={() => setActiveIndex(i => (i + 1) % images.length)}
+                aria-label="Next image"
+              >&#8250;</button>
+            )}
+          </div>
+          {hasMultiple && (
+            <div className={styles.thumbnails}>
+              {images.map((src, i) => (
+                <button
+                  key={i}
+                  className={`${styles.thumbnail} ${i === activeIndex ? styles.thumbnailActive : ''}`}
+                  onClick={() => setActiveIndex(i)}
+                  aria-label={`View image ${i + 1}`}
+                >
+                  <img src={src} alt="" />
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className={styles.productInfo}>
@@ -158,6 +204,7 @@ export default function ProductDetail() {
 
           {(product.height || product.width || product.volume) && (
             <div className={styles.productDetails}>
+              {product.depth && <p className={styles.detailItem}>Depth: {product.depth}</p>}
               {product.height && <p className={styles.detailItem}>Height: {product.height}</p>}
               {product.width && <p className={styles.detailItem}>Width: {product.width}</p>}
               {product.volume && <p className={styles.detailItem}>Volume: {product.volume}</p>}
@@ -171,9 +218,15 @@ export default function ProductDetail() {
 
           {!shopEnabled ? (
             <button className={styles.soldOutBtn} disabled>Shop is currently closed</button>
-          ) : inCart ? (
-            <button className={styles.soldOutBtn} disabled>In your cart</button>
-          ) : product.soldOut || unavailable ? (
+          ) : product.soldOut ? (
+            <button className={styles.soldOutBtn} disabled>Unavailable</button>
+          ) : inCartCount > 0 ? (
+            <div className={styles.quantityControl}>
+              <button className={styles.qtyBtn} onClick={removeOneFromCart}>−</button>
+              <span className={styles.qtyCount}>{inCartCount}</span>
+              <button className={styles.qtyBtn} onClick={addToCart} disabled={unavailable || product.quantity <= 0}>+</button>
+            </div>
+          ) : unavailable || product.quantity <= 0 ? (
             <button className={styles.soldOutBtn} disabled>Unavailable</button>
           ) : (
             <button className={styles.addToCart} onClick={addToCart}>Add to Cart</button>

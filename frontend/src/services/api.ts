@@ -10,9 +10,11 @@ export interface Product {
   price: number
   description: string
   height: string
+  depth?: string
   width: string
   volume: string
   imageUrl: string
+  images?: string[]
   altText?: string
   quantity: number
   isActive: boolean

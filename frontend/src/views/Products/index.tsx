@@ -82,7 +82,7 @@ export default function Products() {
             className={styles.productCard}
           >
             <div className={`${styles.productThumbnail}${product.soldOut && !items.some(i => i.slug === product.slug) ? ` ${styles.isSoldOut}` : ''}`}>
-              <img src={product.imageUrl} alt={product.altText ?? product.name} />
+              <img src={product.images?.[0] ?? product.imageUrl} alt={product.altText ?? product.name} />
               {items.some(i => i.slug === product.slug)
                 ? <div className={styles.soldOutBadge}>In your cart</div>
                 : product.soldOut && <div className={styles.soldOutBadge}>Unavailable</div>

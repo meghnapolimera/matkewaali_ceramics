@@ -71,10 +71,70 @@
   width: 100%;
 }
 
-.productImage img {
+.mainImageWrap {
+  position: relative;
+}
+
+.mainImageWrap img {
   width: 100%;
   height: auto;
   display: block;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: #FEFCF3;
+  border: none;
+  font-size: 2rem;
+  line-height: 1;
+  padding: 8px 14px;
+  cursor: pointer;
+  z-index: 1;
+  transition: background 0.2s ease;
+}
+
+.arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.arrowLeft {
+  left: 0;
+}
+
+.arrowRight {
+  right: 0;
+}
+
+.thumbnails {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+  flex-wrap: wrap;
+}
+
+.thumbnail {
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border: 1px solid #333;
+  background: none;
+  cursor: pointer;
+  overflow: hidden;
+  transition: border-color 0.2s ease;
+}
+
+.thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.thumbnailActive {
+  border-color: #FEFCF3;
 }
 
 .productInfo {
@@ -140,6 +200,51 @@
   padding: 10px 28px;
   width: auto;
   align-self: flex-start;
+}
+
+.quantityControl {
+  display: flex;
+  align-items: stretch;
+  align-self: flex-start;
+  border: 1px solid #FEFCF3;
+}
+
+.qtyBtn {
+  font-family: "Dosis", sans-serif;
+  font-size: 1rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  background: black;
+  border: none;
+  padding: 6px 12px;
+  cursor: pointer;
+  line-height: 1;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.qtyBtn:hover:not(:disabled) {
+  background-color: #FEFCF3;
+  color: black;
+}
+
+.qtyBtn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.qtyCount {
+  font-family: "Dosis", sans-serif;
+  font-size: 0.9rem;
+  font-weight: 300;
+  color: #FEFCF3;
+  padding: 6px 14px;
+  min-width: 28px;
+  text-align: center;
+  border-left: 1px solid #FEFCF3;
+  border-right: 1px solid #FEFCF3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .addToCart {

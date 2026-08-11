@@ -32,6 +32,9 @@ coverage
 *.png.screenshot
 frontend/src/assets/Screenshot*
 
+# Product upload staging area
+upload/
+
 # SAM build artifacts
 .aws-sam/
 infrastructure/backend/.packaged.yaml
