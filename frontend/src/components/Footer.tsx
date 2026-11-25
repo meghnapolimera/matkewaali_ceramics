@@ -5,12 +5,13 @@ import styles from './Footer.module.css'
 
 export default function Footer() {
   const [email, setEmail] = useState('')
+  const [honeypot, setHoneypot] = useState('')
   const [subscribed, setSubscribed] = useState(false)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     try {
-      await api.subscribe(email)
+      await api.subscribe(email, honeypot)
       setSubscribed(true)
       setEmail('')
     } catch {
@@ -25,6 +26,9 @@ export default function Footer() {
           <p className={styles.footerLabel}>Subscribe for updates</p>
           {!subscribed ? (
             <form onSubmit={handleSubmit} className={styles.subscriptionForm}>
+              <div className={styles.honeypot} aria-hidden="true">
+                <input type="text" name="website" value={honeypot} onChange={e => setHoneypot(e.target.value)} tabIndex={-1} autoComplete="off" />
+              </div>
               <input
                 type="email"
                 value={email}

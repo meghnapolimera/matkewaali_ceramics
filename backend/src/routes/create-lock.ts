@@ -12,7 +12,7 @@ const CORS_HEADERS = {
   'Access-Control-Allow-Origin': '*',
 }
 
-const LOCK_TTL_SECONDS = 15 * 60
+const LOCK_TTL_SECONDS = 10 * 60
 
 export async function createLock(event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> {
   const body = JSON.parse(event.body ?? '{}')

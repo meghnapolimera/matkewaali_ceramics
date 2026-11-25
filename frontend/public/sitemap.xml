@@ -57,6 +57,34 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://matkewaali.com/products/angled_carafe</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/oil_pourer</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/shallow_wide_bowl</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/small_bowl</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/spice_box</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/water_carafe_small</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://matkewaali.com/products/water_carafe_large</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://matkewaali.com/about</loc>
     <priority>0.7</priority>
   </url>

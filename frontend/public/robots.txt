@@ -2,3 +2,4 @@ User-agent: *
 Allow: /
 
 Sitemap: https://matkewaali.com/sitemap.xml
+LLMs: https://matkewaali.com/llms.txt

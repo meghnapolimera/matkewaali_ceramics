@@ -86,7 +86,7 @@ VITE_SQUARE_LOCATION_ID=<prod-square-location-id>
 All API routes use AWS IAM auth via Cognito unauthenticated identity pool. The frontend signs requests with SigV4 using `aws4fetch`. **`InvokeRole: NONE` is required** in `api.yaml`'s Auth block — without it, API Gateway tries to use the Cognito role to invoke Lambda and returns 500.
 
 ### Lock Flow
-1. `POST /locks` — atomically decrements product `quantity` and creates a lock record (15-min TTL). Also stores `name` and `price` on the lock for order creation.
+1. `POST /locks` — atomically decrements product `quantity` and creates a lock record (10-min TTL). Also stores `name` and `price` on the lock for order creation.
 2. `DELETE /locks/{lockId}` — atomically deletes lock AND restores `quantity` (user cancelled).
 3. `POST /orders` — on successful payment, deletes lock records WITHOUT restoring `quantity` (items are sold).
 4. DynamoDB Streams on locks table: TTL-triggered deletes fire the stream handler which restores `quantity`. The stream filter (`userIdentity.principalId = dynamodb.amazonaws.com`) ensures only TTL deletes trigger this — order-triggered deletes do not.
@@ -105,3 +105,14 @@ Fixed 10.25% WA rate applied server-side in `create-order.ts` when `shippingAddr
 
 ### One-time Account Setup
 `make setup-account` deploys `account-setup.yaml` — sets the CloudWatch logs role for API Gateway. This must be run once per AWS account (not per environment).
+
+## Keeping llms.txt in Sync
+
+`frontend/public/llms.txt` is a static file that AI crawlers (ChatGPT, Perplexity, Claude, etc.) use to discover shop content. It must be kept accurate. Update it whenever:
+
+- A product is **added** to the shop (add an entry under the appropriate section)
+- A product is **removed** permanently (delete its entry)
+- A product's **price changes** (update the price)
+- The **artist bio or shop description** changes materially
+
+Also update `frontend/public/sitemap.xml` when products are added or removed — slugs must match DynamoDB exactly. The two files should always list the same set of products.

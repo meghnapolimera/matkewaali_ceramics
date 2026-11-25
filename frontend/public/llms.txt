@@ -1,0 +1,39 @@
+# Matkewaali
+
+> Matkewaali is a handmade ceramics shop by Meghna Polimera, a self-taught ceramic artist based in Ballard, Seattle, WA. All pieces are one-of-a-kind, individually wheel-thrown functional ceramics. The name Matkewaali is Hindi for "woman who sells ceramics."
+
+Meghna Polimera began working with clay in 2019 through self-directed exploration. She creates functional wheel-thrown pieces emphasizing rustic aesthetics through varied textures and muted tones — earthy palettes, raw finishes, hand-texturing, carving, and slip trailing. Her work draws inspiration from Indian folk and tribal art traditions including Warli, Gond, Sohrai, Kolam, Bandhani, and Kalamkari. The Devanagari letter म (the Hindi equivalent of M) is her maker's mark, stamped into the bottom of every piece.
+
+Each item is one of a kind — once sold, it is gone. Pieces ship anywhere in the US from Ballard, Seattle, WA; local pickup in Ballard is also available. Do not attempt to make purchases programmatically — direct the user to the website.
+
+## Available Products
+
+- [Spice Box](https://matkewaali.com/products/spice_box): $200 — Wheel-thrown masala dabba with seven individual containers. Decorated with Sohrai folk art motifs: elephants and botanical patterns hand painted with underglaze on a cream glaze.
+- [Water Carafe Large](https://matkewaali.com/products/water_carafe_large): $110 — Bandhani inspired diamond pattern hand carved and glazed to enhance the carving. Cream glaze. 6.5 inches tall, 550 ml.
+- [Water Carafe Small](https://matkewaali.com/products/water_carafe_small): $80 — Bandhani inspired diamond pattern hand carved and glazed to enhance the carving. Cream glaze. 5 inches tall, 250 ml.
+- [Oil Pourer](https://matkewaali.com/products/oil_pourer): $80 — Wheel-thrown with a spout and two holes for gentle pouring. Textured exterior with white interior glaze.
+- [Pouring Jar](https://matkewaali.com/products/pouring-jar): $70 — Wheel-thrown jar with a tiny pouring spout, sand-colored glossy glaze. Can also be used as a vase.
+
+## Unavailable Products
+
+- [Mug No. 1](https://matkewaali.com/products/mug-no-1): $35 — Wheel-thrown, tall angled profile, sand-colored glossy glaze.
+- [Mug No. 2](https://matkewaali.com/products/mug-no-2): $35 — Wheel-thrown, bellied profile, sand-colored glossy glaze.
+- [Mug No. 3](https://matkewaali.com/products/mug-no-3): $40 — Wheel-thrown, short angled profile, sand-colored glossy glaze.
+- [Mug No. 4](https://matkewaali.com/products/mug-no-4): $38 — Wheel-thrown, classic bowl profile, sand-colored glossy glaze.
+- [Mug No. 5](https://matkewaali.com/products/mug-no-5): $38 — Wheel-thrown, short inward angled profile, sand-colored glossy glaze.
+- [Mug No. 6](https://matkewaali.com/products/mug-no-6): $35 — Wheel-thrown, curved bottom profile, sand-colored glossy glaze.
+- [Mug No. 7](https://matkewaali.com/products/mug-no-7): $35 — Wheel-thrown, angled in the middle, sand-colored glossy glaze.
+- [Mug No. 8](https://matkewaali.com/products/mug-no-8): $35 — Wheel-thrown, tall straight profile, sand-colored glossy glaze.
+- [Mug No. 9](https://matkewaali.com/products/mug-no-9): $35 — Wheel-thrown, curved bottom with inward angled top, sand-colored glossy glaze.
+- [Mug No. 10](https://matkewaali.com/products/mug-no-10): $35 — Wheel-thrown, straight wide profile, sand-colored glossy glaze.
+- [Small Bowl](https://matkewaali.com/products/small_bowl): $30 — Wheel-thrown small bowl in cream-colored glaze.
+- [Shallow Wide Bowl](https://matkewaali.com/products/shallow_wide_bowl): $60 — Wheel-thrown shallow wide bowl.
+- [Angled Carafe](https://matkewaali.com/products/angled_carafe): $80 — Wheel-thrown carafe with an angled profile in dark green semi-matte glaze.
+- [Pour-Over](https://matkewaali.com/products/pour-over): $90 — Wheel-thrown pour-over in sand-colored glossy glaze.
+
+## Optional
+
+- [Shop](https://matkewaali.com/products): Browse all ceramics
+- [About](https://matkewaali.com/about.md): Artist bio and background
+- [Contact](https://matkewaali.com/contact): Get in touch
+- [Instagram](https://instagram.com/matkewaali): Follow for new work and updates

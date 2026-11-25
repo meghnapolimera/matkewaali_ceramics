@@ -24,7 +24,7 @@ export default function App() {
       <Header />
       {itemCount > 0 && (
         <div className="cart-expiry-banner">
-          Items in your cart are held for 15 minutes — complete checkout before your reservation expires.
+          Items in your cart are held for 10 minutes — complete checkout before your reservation expires.
         </div>
       )}
       <Outlet />

@@ -202,12 +202,13 @@ export default function ProductDetail() {
             <p className={styles.productDescription}>{product.description}</p>
           )}
 
-          {(product.height || product.width || product.volume) && (
+          {(product.height || product.width || product.volume || product.weightLbs) && (
             <div className={styles.productDetails}>
               {product.depth && <p className={styles.detailItem}>Depth: {product.depth}</p>}
               {product.height && <p className={styles.detailItem}>Height: {product.height}</p>}
               {product.width && <p className={styles.detailItem}>Width: {product.width}</p>}
               {product.volume && <p className={styles.detailItem}>Volume: {product.volume}</p>}
+              {product.weightLbs && <p className={styles.detailItem}>Weight: {product.weightLbs} lbs</p>}
             </div>
           )}
 

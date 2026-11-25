@@ -16,6 +16,7 @@ export interface Product {
   imageUrl: string
   images?: string[]
   altText?: string
+  weightLbs?: string
   quantity: number
   isActive: boolean
   soldOut: boolean
@@ -106,11 +107,11 @@ export const api = {
     }
   },
 
-  async subscribe(email: string): Promise<void> {
+  async subscribe(email: string, honeypot = ''): Promise<void> {
     await signedFetch(`${BASE_URL}/subscribe`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email, website: honeypot }),
     })
   },
 

@@ -9,6 +9,9 @@ export default function About() {
   usePageMeta(
     'About — Matkewaali Ceramics | Seattle',
     'Learn about Meghna Polimera, the artist behind Matkewaali Ceramics. Ceramic artist based in Seattle making handmade ceramics.',
+    undefined,
+    undefined,
+    '/about.md',
   )
   return (
     <div className={styles.aboutPage}>
