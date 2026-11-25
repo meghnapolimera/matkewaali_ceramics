@@ -32,8 +32,15 @@ coverage
 *.png.screenshot
 frontend/src/assets/Screenshot*
 
-# Product upload staging area
+# Product upload staging area and stray product images (stored in S3, not git)
 upload/
+*.jpeg
+*.jpg
+*.png
+!frontend/src/assets/*.jpeg
+!frontend/src/assets/*.jpg
+!frontend/src/assets/*.png
+!frontend/public/*.png
 
 # SAM build artifacts
 .aws-sam/
